@@ -759,7 +759,7 @@ function allNodesFlat(node=fs, acc=[]){
 
 async function loadFiles(){
  const {data,error}=await sb.from("files").select("*");
- if(error){ $("status").textContent="ОШИБКА ЗАГРУЗКИ БАЗЫ"; console.error(error); return; }
+ if(error){ alert("ОШИБКА ЗАГРУЗКИ БАЗЫ: "+error.message); console.error(error); return; }
  rebuildFromRows(data||[]);
 }
 function rebuildFromRows(rows){
@@ -906,7 +906,7 @@ $("fileBtn").onclick=()=>modal("НОВЫЙ ФАЙЛ",async n=>{
  n=n.trim()||"БЕЗ_ИМЕНИ.TXT"; if(!n.includes("."))n+=".TXT";
  const {data,error}=await sb.from("files").insert({name:n.toUpperCase(),type:"file",content:"",tags:[],parent_id:folder.id}).select().single();
  close();
- if(error){ $("status").textContent="ОШИБКА СОЗДАНИЯ ФАЙЛА"; return; }
+ if(error){ alert("ОШИБКА СОЗДАНИЯ ФАЙЛА: "+error.message); console.error(error); return; }
  await loadFiles();
  const opened=findById(fs,data.id); if(opened) open(opened);
 });
@@ -914,7 +914,7 @@ $("folderBtn").onclick=()=>modal("НОВАЯ ПАПКА",async n=>{
  n=n.trim()||"НОВАЯ_ПАПКА";
  const {error}=await sb.from("files").insert({name:n.toUpperCase(),type:"folder",tags:[],parent_id:folder.id});
  close();
- if(error){ $("status").textContent="ОШИБКА СОЗДАНИЯ ПАПКИ"; return; }
+ if(error){ alert("ОШИБКА СОЗДАНИЯ ПАПКИ: "+error.message); console.error(error); return; }
  await loadFiles();
 });
 $("deleteBtn").onclick=async()=>{
