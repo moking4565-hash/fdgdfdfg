@@ -571,6 +571,17 @@ button:hover{background:#3a0912;box-shadow:0 0 12px rgba(255,35,65,.5)}
 .workspace{display:grid;grid-template-columns:270px 1fr;min-height:calc(100vh - 55px)}
 .sidebar{padding:15px;background:rgba(10,2,6,.8);border-right:1px solid #4e1521}.sidebar h3{font-size:12px;color:var(--red);letter-spacing:2px}
 .tree{list-style:none;padding:0;margin:0}.tree li{padding:8px;margin:2px 0;color:#b87582;cursor:pointer;border:1px solid transparent;font-size:13px}.tree li:hover,.tree li.active{border-color:#5e1826;background:#1c0710;color:#ff7589}
+.search{width:100%;background:#050103;border:1px solid #4e1521;color:#e8b6bf;padding:9px 10px;outline:none;font:13px var(--font-mono);margin-bottom:10px}
+.search::placeholder{color:#5e2a34}
+.tags{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:0 0 14px}
+.tag{display:inline-flex;align-items:center;gap:6px;padding:4px 8px;border:1px solid #7a2436;background:#1c0710;color:#ff9aa8;font-size:11px;letter-spacing:.5px}
+.tag button{background:none;border:none;color:#ff657b;cursor:pointer;font:inherit;padding:0;line-height:1}
+.tagAdd{background:#050103;border:1px dashed #5f1826;color:#c98a94;font:11px var(--font-mono);padding:4px 8px;outline:none;width:110px}
+.treeTag{font-size:9px;color:#8a4b56;margin-left:4px}
+#imgview{max-width:100%;max-height:68vh;border:1px solid #5f1826;display:block;margin:0 auto}
+.searchResult{padding:8px;border:1px solid #4e1521;margin:0 0 6px;cursor:pointer;color:#c98a94;font-size:12px}
+.searchResult:hover{background:#1c0710;color:#ff9aa8}
+.searchResult .p{color:#6b3b44;font-size:10px}
 .editor{padding:22px;min-width:0}.filebar{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:12px}.fname{color:#ff657b;font-size:18px}.meta,.hint{color:#75424d;font-size:11px}
 #text{width:100%;min-height:68vh;resize:vertical;background:#080207;color:#e8b6bf;border:1px solid #5f1826;outline:none;padding:20px;font:15px/1.7 var(--font)}
 #text:focus{border-color:#b72a43;box-shadow:0 0 18px rgba(190,20,45,.12)}
@@ -584,17 +595,23 @@ button:hover{background:#3a0912;box-shadow:0 0 12px rgba(255,35,65,.5)}
 <body>
 <div class="crt"></div>
 
-<section id="login">
+<section id="boot-screen">
+  <div id="noise-layer"></div>
+  <div class="glitch-bar"></div>
+  <div class="glitch-bar" style="animation-delay:.3s"></div>
+  <div id="boot-text"><span id="boot-cursor"></span></div>
+</section>
+<div id="boot-flash"></div>
+
+<section id="login" class="hidden">
   <div class="login-glitch"></div>
   <div class="box">
-    <div class="title" id="authTitle">ВХОД // 04</div>
-    <div class="sub" id="authSub">ВОССТАНОВЛЕННЫЙ ИНТЕРФЕЙС ХРАНИЛИЩА<br>БАЗА ДАННЫХ: SUPABASE<br>ВОЙДИТЕ ИЛИ ЗАРЕГИСТРИРУЙТЕСЬ</div>
+    <div class="title" id="authTitle">ДОСТУП // 04</div>
+    <div class="sub" id="authSub">ВОССТАНОВЛЕННЫЙ ИНТЕРФЕЙС ХРАНИЛИЩА<br>БАЗА ДАННЫХ: SUPABASE<br>ВВЕДИТЕ ПАРОЛЬ ДЛЯ ПРОДОЛЖЕНИЯ</div>
     <form id="loginForm">
-      <input id="email" type="email" placeholder="ПОЧТА" autocomplete="username" style="width:100%;background:#050400;border:1px solid #795f14;color:var(--yellow);padding:13px;outline:none;margin-bottom:8px">
-      <div class="row"><input id="pass" type="password" placeholder="ПАРОЛЬ" autocomplete="current-password"><button id="submitBtn">ВОЙТИ</button></div>
+      <div class="row"><input id="pass" type="password" placeholder="ПАРОЛЬ" autocomplete="off"><button id="submitBtn">ВОЙТИ</button></div>
     </form>
     <div id="status" class="status"></div>
-    <div class="sub" style="margin:14px 0 0;cursor:pointer;text-decoration:underline" id="toggleMode">Нет аккаунта? Зарегистрироваться</div>
   </div>
 </section>
 
@@ -602,22 +619,31 @@ button:hover{background:#3a0912;box-shadow:0 0 12px rgba(255,35,65,.5)}
   <header class="top">
     <div class="brand">ВОССТАНОВЛЕНО // ФАЙЛОВАЯ СИСТЕМА</div>
     <div id="path" class="path">/root</div>
-    <div id="userBadge" class="path"></div>
     <button id="folderBtn">+ ПАПКА</button><button id="fileBtn">+ ФАЙЛ</button>
+    <button id="imageBtn">+ КАРТИНКА</button>
+    <input id="imageInput" type="file" accept="image/*" class="hidden">
     <button id="saveBtn">СОХРАНИТЬ</button><button id="lockBtn">ВЫЙТИ</button>
   </header>
   <main class="workspace">
-    <aside class="sidebar"><h3>КАТАЛОГ</h3><ul id="tree" class="tree"></ul></aside>
+    <aside class="sidebar">
+      <input id="search" class="search" placeholder="ПОИСК ПО ИМЕНИ, ТЕГАМ, СОДЕРЖИМОМУ...">
+      <h3>КАТАЛОГ</h3>
+      <ul id="tree" class="tree"></ul>
+      <div id="searchResults" class="hidden"></div>
+    </aside>
     <section class="editor">
       <div id="empty" class="empty">ВЫБЕРИТЕ ФАЙЛ ИЗ КАТАЛОГА<br>ИЛИ СОЗДАЙТЕ НОВЫЙ ФАЙЛ.</div>
       <div id="view" class="hidden">
         <div class="filebar"><div><div id="fname" class="fname"></div><div id="meta" class="meta"></div></div><button id="deleteBtn">УДАЛИТЬ</button></div>
+        <div id="tags" class="tags"></div>
         <textarea id="text" spellcheck="false"></textarea>
-        <div class="hint">Файлы и папки хранятся в базе данных Supabase и видны всем зарегистрированным пользователям сайта в реальном времени.</div>
+        <img id="imgview" class="hidden">
+        <div class="hint">Файлы, папки и картинки хранятся в базе данных Supabase и видны всем посетителям сайта в реальном времени.</div>
       </div>
     </section>
   </main>
 </section>
+
 
 <div id="modal" class="modal hidden"><div class="modalbox"><h3 id="modalTitle"></h3><input id="modalInput" autocomplete="off"><div class="actions"><button id="cancel">ОТМЕНА</button><button id="create">СОЗДАТЬ</button></div></div></div>
 
@@ -630,6 +656,61 @@ const SUPABASE_ANON_KEY = "sb_publishable_BHo94CSjh9t-P4rmJDm7Sw_zySwEvQe";
 // ================================================================
 
 const $=id=>document.getElementById(id);
+
+// ===================== ЗАГРУЗОЧНЫЙ ЭКРАН (ГЛИТЧ) =====================
+const BOOT_LINES=[
+ {t:"ИНИЦИАЛИЗАЦИЯ НОСИТЕЛЯ...", cls:""},
+ {t:"СКАНИРОВАНИЕ СЕКТОРОВ: [████████████] 100%", cls:""},
+ {t:"ВОССТАНОВЛЕНИЕ ТАБЛИЦЫ ПРОЦЕССОВ...", cls:""},
+ {t:"PID 0041 // storage.daemon ......... OK", cls:""},
+ {t:"PID 0087 // sync.worker ............ OK", cls:""},
+ {t:"PID 0132 // index.cache ............ ПОВРЕЖДЕН", cls:"warn-line"},
+ {t:"ПОПЫТКА ВОССТАНОВЛЕНИЯ КЭША...", cls:"warn-line"},
+ {t:"PID 0132 // index.cache ............ ВОССТАНОВЛЕН", cls:""},
+ {t:"ПОДКЛЮЧЕНИЕ К ХРАНИЛИЩУ ДАННЫХ...", cls:""},
+ {t:"СОЕДИНЕНИЕ УСТАНОВЛЕНО", cls:"bright"},
+ {t:"ЗАГРУЗКА ИНТЕРФЕЙСА ДОСТУПА...", cls:"bright"},
+];
+function spawnNoise(){
+ const layer=$("noise-layer"); if(!layer) return;
+ const chars="01_/\\#$%&?ERR";
+ for(let i=0;i<26;i++){
+  const s=document.createElement("span");
+  s.className="noise-char";
+  s.textContent=chars[Math.floor(Math.random()*chars.length)];
+  s.style.left=Math.random()*100+"%";
+  s.style.top=Math.random()*100+"%";
+  s.style.animationDuration=(1.4+Math.random()*2.2)+"s";
+  s.style.animationDelay=(Math.random()*2.5)+"s";
+  layer.appendChild(s);
+ }
+}
+function playBoot(){
+ return new Promise(resolve=>{
+  const boot=$("boot-screen"), textEl=$("boot-text"), cursor=$("boot-cursor");
+  if(!boot||!textEl){ resolve(); return; }
+  spawnNoise();
+  let i=0;
+  function next(){
+   if(i>=BOOT_LINES.length){
+    setTimeout(()=>{
+     const flash=$("boot-flash"); if(flash) flash.classList.add("go");
+     boot.classList.add("fade-out");
+     setTimeout(()=>{ boot.classList.add("hidden"); resolve(); }, 550);
+    }, 260);
+    return;
+   }
+   const l=BOOT_LINES[i++];
+   const div=document.createElement("div");
+   div.className="line"+(l.cls?" "+l.cls:"")+" glitch-text";
+   div.textContent=l.t;
+   textEl.insertBefore(div, cursor);
+   setTimeout(next, 130 + Math.random()*160);
+  }
+  setTimeout(next, 200);
+ });
+}
+
 let sb=null, configOk = !SUPABASE_URL.startsWith("YOUR_") && !SUPABASE_ANON_KEY.startsWith("YOUR_");
 if(configOk){
  sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -637,9 +718,11 @@ if(configOk){
  $("status").textContent="НЕ НАСТРОЕНО: впишите SUPABASE_URL и SUPABASE_ANON_KEY в файле index.html (см. SETUP.md)";
 }
 
-let mode="login"; // "login" | "signup"
-let fs={id:null,name:"root",type:"folder",children:[]}; // синтетический корень
-let folder=fs, file=null, action=null, channel=null, currentUser=null;
+const SITE_PASSWORD = "joji2";
+const IMAGE_BUCKET = "images";
+
+let fs={id:null,name:"root",type:"folder",children:[],tags:[]}; // синтетический корень
+let folder=fs, file=null, action=null, channel=null;
 
 function findById(node,id){
  if(node.id===id)return node;
@@ -658,7 +741,7 @@ function pathOf(target){
 }
 function buildTree(rows){
  const byId={};
- rows.forEach(r=>byId[r.id]={id:r.id,parent_id:r.parent_id,name:r.name,type:r.type,content:r.content||"",children:[]});
+ rows.forEach(r=>byId[r.id]={id:r.id,parent_id:r.parent_id,name:r.name,type:r.type,content:r.content||"",tags:r.tags||[],children:[]});
  const root=[];
  rows.forEach(r=>{
   const node=byId[r.id];
@@ -669,6 +752,10 @@ function buildTree(rows){
  sortRec(root);
  return root;
 }
+function allNodesFlat(node=fs, acc=[]){
+ (node.children||[]).forEach(c=>{ acc.push(c); allNodesFlat(c,acc); });
+ return acc;
+}
 
 async function loadFiles(){
  const {data,error}=await sb.from("files").select("*");
@@ -678,11 +765,15 @@ async function loadFiles(){
 function rebuildFromRows(rows){
  const openId=file?file.id:null;
  const openFolderId=folder?folder.id:null;
- fs={id:null,name:"root",type:"folder",children:buildTree(rows)};
+ fs={id:null,name:"root",type:"folder",children:buildTree(rows),tags:[]};
  folder = openFolderId ? (findById(fs,openFolderId)||fs) : fs;
  if(openId){
   const still=findById(fs,openId);
-  if(still){ file=still; if(document.activeElement!==$("text")) $("text").value=file.content||""; }
+  if(still){
+   file=still;
+   if(document.activeElement!==$("text")) $("text").value=file.content||"";
+   renderTags();
+  }
   else { file=null; }
  }
  render();
@@ -690,19 +781,96 @@ function rebuildFromRows(rows){
  else if(document.activeElement!==$("text")){ empty(); }
 }
 
+function iconFor(type){ return type==="folder" ? "▾" : type==="image" ? "🖼" : "▤"; }
+
 function render(){
+ if(!$("search").value.trim()){ $("searchResults").classList.add("hidden"); $("tree").classList.remove("hidden"); }
  const tree=$("tree");tree.innerHTML="";
  function add(dir,depth){
-  const li=document.createElement("li");li.textContent="▾ "+dir.name;li.style.paddingLeft=(8+depth*18)+"px";li.className="folder"+(dir===folder?" active":"");li.onclick=()=>{folder=dir;file=null;empty();render()};tree.appendChild(li);
-  (dir.children||[]).forEach(x=>x.type==="folder"?add(x,depth+1):(()=>{const f=document.createElement("li");f.textContent="▤ "+x.name;f.style.paddingLeft=(26+depth*18)+"px";f.className=(file&&x.id===file.id)?"active":"";f.onclick=()=>open(x);tree.appendChild(f)})());
+  const li=document.createElement("li");li.textContent="▾ "+dir.name+(dir.tags&&dir.tags.length?"":"");
+  if(dir.tags&&dir.tags.length){ const t=document.createElement("span"); t.className="treeTag"; t.textContent=dir.tags.map(x=>"#"+x).join(" "); li.appendChild(t); }
+  li.style.paddingLeft=(8+depth*18)+"px";li.className="folder"+(dir===folder&&!file?" active":"");li.onclick=()=>{folder=dir;file=null;empty();render()};tree.appendChild(li);
+  (dir.children||[]).forEach(x=>x.type==="folder"?add(x,depth+1):(()=>{
+   const f=document.createElement("li");
+   f.textContent=iconFor(x.type)+" "+x.name;
+   if(x.tags&&x.tags.length){ const t=document.createElement("span"); t.className="treeTag"; t.textContent=x.tags.map(g=>"#"+g).join(" "); f.appendChild(t); }
+   f.style.paddingLeft=(26+depth*18)+"px";f.className=(file&&x.id===file.id)?"active":"";f.onclick=()=>open(x);tree.appendChild(f);
+  })());
  }
  add(fs,0)
 }
 function empty(){$("empty").classList.remove("hidden");$("view").classList.add("hidden");$("path").textContent=pathOf(folder)}
-function open(x){file=x;folder=parentOf(x)||fs;$("empty").classList.add("hidden");$("view").classList.remove("hidden");$("fname").textContent=x.name;$("meta").textContent=pathOf(x)+" // БАЗА ДАННЫХ";$("path").textContent=pathOf(x);$("text").value=x.content||"";render()}
+function open(x){
+ file=x;folder=parentOf(x)||fs;
+ $("empty").classList.add("hidden");$("view").classList.remove("hidden");
+ $("fname").textContent=x.name;$("meta").textContent=pathOf(x)+" // БАЗА ДАННЫХ";$("path").textContent=pathOf(x);
+ if(x.type==="image"){
+  $("text").classList.add("hidden"); $("imgview").classList.remove("hidden"); $("imgview").src=x.content||"";
+ }else{
+  $("imgview").classList.add("hidden"); $("text").classList.remove("hidden"); $("text").value=x.content||"";
+ }
+ renderTags();
+ render();
+}
 function modal(title,fn){action=fn;$("modalTitle").textContent=title;$("modalInput").value="";$("modal").classList.remove("hidden");$("modalInput").focus()}
 function close(){action=null;$("modal").classList.add("hidden")}
 
+// ===================== ТЕГИ =====================
+function renderTags(){
+ const box=$("tags"); box.innerHTML="";
+ if(!file){ return; }
+ (file.tags||[]).forEach(tag=>{
+  const chip=document.createElement("span"); chip.className="tag";
+  const label=document.createElement("span"); label.textContent="#"+tag; chip.appendChild(label);
+  const rm=document.createElement("button"); rm.textContent="×"; rm.onclick=()=>removeTag(tag); chip.appendChild(rm);
+  box.appendChild(chip);
+ });
+ const addBtn=document.createElement("input"); addBtn.className="tagAdd"; addBtn.placeholder="+ тег";
+ addBtn.onkeydown=e=>{ if(e.key==="Enter"){ addTag(addBtn.value); addBtn.value=""; } };
+ box.appendChild(addBtn);
+}
+async function addTag(raw){
+ if(!file) return;
+ const t=raw.trim().toLowerCase().replace(/\s+/g,"-");
+ if(!t) return;
+ const tags=Array.from(new Set([...(file.tags||[]), t]));
+ file.tags=tags;
+ renderTags(); render();
+ const {error}=await sb.from("files").update({tags}).eq("id",file.id);
+ if(error) $("meta").textContent=pathOf(file)+" // ОШИБКА СОХРАНЕНИЯ ТЕГА";
+}
+async function removeTag(tag){
+ if(!file) return;
+ const tags=(file.tags||[]).filter(x=>x!==tag);
+ file.tags=tags;
+ renderTags(); render();
+ await sb.from("files").update({tags}).eq("id",file.id);
+}
+
+// ===================== ПОИСК =====================
+function runSearch(q){
+ q=q.trim().toLowerCase();
+ if(!q){ $("searchResults").classList.add("hidden"); $("tree").classList.remove("hidden"); return; }
+ $("tree").classList.add("hidden"); $("searchResults").classList.remove("hidden");
+ const all=allNodesFlat();
+ const results=all.filter(n=>{
+  if(n.name.toLowerCase().includes(q)) return true;
+  if((n.tags||[]).some(t=>t.toLowerCase().includes(q))) return true;
+  if(n.type!=="folder" && n.type!=="image" && (n.content||"").toLowerCase().includes(q)) return true;
+  return false;
+ });
+ const box=$("searchResults"); box.innerHTML="";
+ if(!results.length){ box.innerHTML='<div class="searchResult">НИЧЕГО НЕ НАЙДЕНО</div>'; return; }
+ results.forEach(n=>{
+  const div=document.createElement("div"); div.className="searchResult";
+  div.innerHTML = iconFor(n.type)+" "+n.name+(n.tags&&n.tags.length?" <span class='treeTag'>"+n.tags.map(t=>"#"+t).join(" ")+"</span>":"")+"<div class='p'>"+pathOf(n)+"</div>";
+  div.onclick=()=>{ if(n.type==="folder"){ folder=n; file=null; empty(); render(); } else { open(n); } $("search").value=""; runSearch(""); };
+  box.appendChild(div);
+ });
+}
+$("search").oninput=()=>runSearch($("search").value);
+
+// ===================== РЕАЛТАЙМ =====================
 function subscribeRealtime(){
  if(channel) sb.removeChannel(channel);
  channel = sb.channel("files-changes")
@@ -713,73 +881,30 @@ function subscribeRealtime(){
 async function enterApp(){
  $("login").classList.add("hidden");
  $("app").classList.remove("hidden");
- $("userBadge").textContent = currentUser?.email || "";
  await loadFiles();
  empty();
  subscribeRealtime();
 }
 
-async function checkSession(){
- if(!configOk) return;
- const {data:{session}} = await sb.auth.getSession();
- if(session){ currentUser=session.user; await enterApp(); }
- sb.auth.onAuthStateChange((event, session)=>{
-  if(event==="SIGNED_OUT"){
-   currentUser=null;
-   if(channel){ sb.removeChannel(channel); channel=null; }
-   $("app").classList.add("hidden");
-   $("login").classList.remove("hidden");
-  }
- });
-}
-
-function setMode(m){
- mode=m;
- if(m==="signup"){
-  $("authTitle").textContent="РЕГИСТРАЦИЯ // 04";
-  $("submitBtn").textContent="ЗАРЕГИСТРИРОВАТЬСЯ";
-  $("toggleMode").textContent="Уже есть аккаунт? Войти";
- }else{
-  $("authTitle").textContent="ВХОД // 04";
-  $("submitBtn").textContent="ВОЙТИ";
-  $("toggleMode").textContent="Нет аккаунта? Зарегистрироваться";
- }
- $("status").textContent="";
-}
-$("toggleMode").onclick=()=>setMode(mode==="login"?"signup":"login");
-
 $("loginForm").onsubmit=async e=>{
  e.preventDefault();
  if(!configOk){ $("status").textContent="СНАЧАЛА НАСТРОЙТЕ SUPABASE_URL И SUPABASE_ANON_KEY"; return; }
- const email=$("email").value.trim(), pass=$("pass").value;
- if(!email||!pass){ $("status").textContent="ВВЕДИТЕ ПОЧТУ И ПАРОЛЬ"; return; }
- $("status").textContent="ПРОВЕРКА...";
- if(mode==="signup"){
-  const {data,error}=await sb.auth.signUp({email,password:pass});
-  if(error){ $("status").textContent="ОШИБКА: "+error.message; return; }
-  if(!data.session){
-   $("status").textContent="РЕГИСТРАЦИЯ УСПЕШНА. ПРОВЕРЬТЕ ПОЧТУ ДЛЯ ПОДТВЕРЖДЕНИЯ, ЗАТЕМ ВОЙДИТЕ.";
-   setMode("login");
-   return;
-  }
-  currentUser=data.user; await enterApp();
- }else{
-  const {data,error}=await sb.auth.signInWithPassword({email,password:pass});
-  if(error){ $("status").textContent="ОШИБКА: "+error.message; return; }
-  currentUser=data.user; await enterApp();
- }
+ const pass=$("pass").value;
+ if(pass!==SITE_PASSWORD){ $("status").textContent="ДОСТУП ЗАПРЕЩЁН // НЕВЕРНЫЙ ПАРОЛЬ"; $("pass").value=""; return; }
+ $("status").textContent="ДОСТУП РАЗРЕШЁН";
+ setTimeout(enterApp,200);
 };
 
 $("text").oninput=()=>{if(file)file.content=$("text").value};
 $("saveBtn").onclick=async()=>{
- if(!file) return;
+ if(!file || file.type==="image") return;
  file.content=$("text").value;
- const {error}=await sb.from("files").update({content:file.content, updated_at:new Date().toISOString(), updated_by:currentUser?.id}).eq("id",file.id);
+ const {error}=await sb.from("files").update({content:file.content, updated_at:new Date().toISOString()}).eq("id",file.id);
  $("meta").textContent=pathOf(file)+(error?" // ОШИБКА СОХРАНЕНИЯ":" // СОХРАНЕНО");
 };
 $("fileBtn").onclick=()=>modal("НОВЫЙ ФАЙЛ",async n=>{
  n=n.trim()||"БЕЗ_ИМЕНИ.TXT"; if(!n.includes("."))n+=".TXT";
- const {data,error}=await sb.from("files").insert({name:n.toUpperCase(),type:"file",content:"",parent_id:folder.id,created_by:currentUser?.id,updated_by:currentUser?.id}).select().single();
+ const {data,error}=await sb.from("files").insert({name:n.toUpperCase(),type:"file",content:"",tags:[],parent_id:folder.id}).select().single();
  close();
  if(error){ $("status").textContent="ОШИБКА СОЗДАНИЯ ФАЙЛА"; return; }
  await loadFiles();
@@ -787,7 +912,7 @@ $("fileBtn").onclick=()=>modal("НОВЫЙ ФАЙЛ",async n=>{
 });
 $("folderBtn").onclick=()=>modal("НОВАЯ ПАПКА",async n=>{
  n=n.trim()||"НОВАЯ_ПАПКА";
- const {error}=await sb.from("files").insert({name:n.toUpperCase(),type:"folder",parent_id:folder.id,created_by:currentUser?.id,updated_by:currentUser?.id});
+ const {error}=await sb.from("files").insert({name:n.toUpperCase(),type:"folder",tags:[],parent_id:folder.id});
  close();
  if(error){ $("status").textContent="ОШИБКА СОЗДАНИЯ ПАПКИ"; return; }
  await loadFiles();
@@ -800,9 +925,30 @@ $("deleteBtn").onclick=async()=>{
 };
 $("create").onclick=()=>{if(action)action($("modalInput").value)};
 $("cancel").onclick=close;$("modalInput").onkeydown=e=>{if(e.key==="Enter")$("create").click();if(e.key==="Escape")close()};
-$("lockBtn").onclick=async()=>{ await sb.auth.signOut(); };
+$("lockBtn").onclick=()=>{
+ if(channel){ sb.removeChannel(channel); channel=null; }
+ file=null;
+ $("app").classList.add("hidden"); $("login").classList.remove("hidden");
+ $("pass").value=""; $("status").textContent="";
+};
 
-checkSession();
+// ===================== ЗАГРУЗКА КАРТИНОК =====================
+$("imageBtn").onclick=()=>$("imageInput").click();
+$("imageInput").onchange=async()=>{
+ const f=$("imageInput").files[0]; if(!f) return;
+ $("status2");
+ const path=(crypto.randomUUID?crypto.randomUUID():String(Date.now()))+"-"+f.name.replace(/[^a-zA-Z0-9.\-_]/g,"_");
+ const {error:upErr}=await sb.storage.from(IMAGE_BUCKET).upload(path,f,{cacheControl:"3600",upsert:false});
+ if(upErr){ alert("ОШИБКА ЗАГРУЗКИ КАРТИНКИ: "+upErr.message); $("imageInput").value=""; return; }
+ const {data:{publicUrl}}=sb.storage.from(IMAGE_BUCKET).getPublicUrl(path);
+ const {data,error}=await sb.from("files").insert({name:f.name.toUpperCase(),type:"image",content:publicUrl,tags:[],parent_id:folder.id}).select().single();
+ $("imageInput").value="";
+ if(error){ alert("ОШИБКА СОХРАНЕНИЯ КАРТИНКИ В БАЗЕ"); return; }
+ await loadFiles();
+ const opened=findById(fs,data.id); if(opened) open(opened);
+};
+
+playBoot().then(()=>{ $("login").classList.remove("hidden"); $("pass").focus(); });
 })();
 </script>
 </body>
