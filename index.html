@@ -555,13 +555,63 @@
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text);font-family:var(--font)}
 body{overflow-x:hidden}.hidden{display:none!important}
 .crt{position:fixed;inset:0;pointer-events:none;z-index:999;background:repeating-linear-gradient(0deg,rgba(0,0,0,.18) 0 1px,transparent 1px 4px);box-shadow:inset 0 0 140px rgba(0,0,0,.7)}
-#login{min-height:100vh;display:flex;align-items:center;justify-content:center;position:relative;background:radial-gradient(circle,rgba(255,190,0,.08),transparent 45%),#030200}
-.login-glitch{position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent 0 5px,rgba(255,210,40,.05) 6px 7px);animation:g .18s steps(2) infinite}
-.box{width:min(460px,90vw);padding:32px;border:1px solid #806516;background:rgba(7,5,0,.94);position:relative;z-index:2;box-shadow:0 0 40px rgba(255,190,0,.12)}
-.title{color:var(--yellow);font-size:clamp(25px,5vw,40px);letter-spacing:4px;text-shadow:0 0 14px rgba(255,210,45,.75)}
-.sub{color:#a88938;font-size:12px;line-height:1.8;margin:10px 0 24px}
+#login{min-height:100vh;display:flex;align-items:center;justify-content:center;position:relative;background:radial-gradient(circle,rgba(0,234,255,.07),transparent 45%),#030006;overflow:hidden}
+.login-glitch{position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent 0 5px,rgba(0,234,255,.04) 6px 7px);animation:g .18s steps(2) infinite}
+#toad-wrap{position:absolute;left:50%;bottom:-4vh;transform:translateX(-50%);width:min(1100px,150vw);z-index:1;opacity:.96;filter:drop-shadow(0 0 22px rgba(0,234,255,.22)) drop-shadow(0 0 30px rgba(255,45,224,.16))}
+#toad{width:100%;height:auto;display:block;animation:toadGlitch 2.1s infinite,toadHologram 5.2s ease-in-out infinite}
+#toad-eye-l,#toad-eye-r{animation:toadBlink 4.4s infinite;transform-box:fill-box;transform-origin:center}
+#toad-pupil-l,#toad-pupil-r{animation:toadPupilGlitch 2.1s infinite}
+@keyframes toadPupilGlitch{0%,88%,100%{fill:#eef6f2;ry:9}89%{fill:#00eaff;ry:3}90%{fill:#ff2de0;ry:9}91%{fill:#ffffff;ry:4}92%{fill:#eef6f2;ry:9}}
+@keyframes toadBlink{0%,94%,100%{transform:scaleY(1)}96%{transform:scaleY(.08)}98%{transform:scaleY(1)}}
+#toad-mouth-top,#toad-mouth-bottom{transition:d .5s ease}
+#toad-wrap.chomp #toad-mouth-top{d:path("M120 145 Q200 88 280 145 Q200 118 120 145 Z")}
+#toad-wrap.chomp #toad-mouth-bottom{d:path("M120 145 Q200 220 280 145 Q200 178 120 145 Z")}
+@keyframes digitFlicker{0%,100%{opacity:.9}30%{opacity:.15}40%{opacity:1}58%{opacity:.25}75%{opacity:.9}88%{opacity:.3}}
+@keyframes toadGlitch{
+ 0%,72%,100%{filter:none;transform:translate(0,0) skewX(0)}
+ 73%{filter:drop-shadow(8px 0 0 #ff2de0) drop-shadow(-8px 0 0 #00eaff);transform:translate(-9px,1px) skewX(3deg)}
+ 74%{filter:drop-shadow(-9px 0 0 #ff2de0) drop-shadow(9px 0 0 #00eaff);transform:translate(6px,-2px) skewX(-4deg)}
+ 75%{filter:none;transform:translate(0,3px) skewX(0)}
+ 76%{filter:drop-shadow(5px 0 0 #b026ff) drop-shadow(-5px 0 0 #00eaff);transform:translate(-4px,0)}
+ 77%{filter:none;transform:translate(2px,-1px)}
+ 82%,84%{filter:drop-shadow(-6px 0 0 #00eaff) drop-shadow(6px 0 0 #ff2de0);transform:translate(4px,1px)}
+ 83%,85%{filter:none;transform:translate(0,0)}
+ 90%{filter:drop-shadow(4px 0 0 #ff2de0);transform:translate(-3px,0) skewX(2deg)}
+ 91%{filter:drop-shadow(-4px 0 0 #00eaff);transform:translate(3px,0) skewX(-2deg)}
+ 92%,100%{filter:none;transform:translate(0,0) skewX(0)}
+}
+@keyframes toadHologram{0%,100%{opacity:1}44%{opacity:1}46%{opacity:.45}48%{opacity:1}70%{opacity:1}71.5%{opacity:.25}73%{opacity:1}}
+#toad-wrap::before,#toad-wrap::after{content:"";position:absolute;inset:0;pointer-events:none;mix-blend-mode:screen}
+#toad-wrap::before{
+  background:repeating-linear-gradient(0deg,transparent 0 3px,rgba(0,234,255,.09) 4px 5px);
+  animation:cyanScan .16s steps(2) infinite;
+}
+#toad-wrap::after{
+  background:linear-gradient(90deg,transparent 0%,rgba(0,234,255,.22) 40%,rgba(255,45,224,.22) 60%,transparent 100%);
+  opacity:0;
+  animation:toadSlice 2.6s steps(1) infinite;
+}
+@keyframes cyanScan{0%{transform:translateY(0)}35%{transform:translateY(2px)}36%{transform:translateY(-1px)}70%{transform:translateY(1px)}100%{transform:translateY(0)}}
+@keyframes toadSlice{
+ 0%,78%,100%{opacity:0;transform:translateX(0);clip-path:inset(0 0 0 0)}
+ 78.5%{opacity:.95;transform:translateX(-18px);clip-path:inset(20% 0 56% 0)}
+ 79.4%{opacity:.95;transform:translateX(14px);clip-path:inset(60% 0 10% 0)}
+ 80.2%{opacity:.9;transform:translateX(-10px);clip-path:inset(4% 0 80% 0)}
+ 81%{opacity:.9;transform:translateX(8px);clip-path:inset(40% 0 30% 0)}
+ 81.7%{opacity:0}
+}
+#toad-hex{position:absolute;inset:0;pointer-events:none;overflow:visible}
+.hex-label{position:absolute;font-family:var(--font-mono);font-size:11px;color:#00eaff;text-shadow:0 0 6px currentColor;white-space:nowrap;animation:hexFloat 3.4s ease-in-out infinite,digitFlicker 1.8s ease-in-out infinite}
+@keyframes hexFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
+.box{width:min(460px,90vw);padding:32px;border:1px solid #22c9e0;background:rgba(4,3,10,.94);position:relative;z-index:2;box-shadow:0 0 18px rgba(0,234,255,.2),0 0 34px rgba(255,45,224,.15);transition:transform .55s cubic-bezier(.6,-0.2,.85,.2),opacity .5s ease .1s}
+.box.eaten{transform:translateY(120px) scale(.15) rotate(8deg);opacity:0}
+#login-flash{position:fixed;inset:0;background:#fff;opacity:0;pointer-events:none;z-index:50}
+#login-flash.go{animation:loginFlash .5s ease}
+@keyframes loginFlash{0%{opacity:0}12%{opacity:1}100%{opacity:0}}
+.title{color:#00eaff;font-size:clamp(25px,5vw,40px);letter-spacing:4px;text-shadow:0 0 14px rgba(0,234,255,.8),0 0 26px rgba(255,45,224,.4)}
+.sub{color:#7fd8e8;font-size:12px;line-height:1.8;margin:10px 0 24px}
 .row{display:flex;gap:8px}input,textarea{font:inherit}
-#pass{flex:1;background:#050400;border:1px solid #795f14;color:var(--yellow);padding:13px;outline:none}
+#pass{flex:1;background:#04020a;border:1px solid #1f7f95;color:#00eaff;padding:13px;outline:none}
 button{font:inherit;background:#21070d;color:var(--red);border:1px solid #a9273c;padding:11px 15px;cursor:pointer}
 button:hover{background:#3a0912;box-shadow:0 0 12px rgba(255,35,65,.5)}
 .status{min-height:22px;margin-top:14px;font-size:12px;color:#ff5168}
@@ -605,7 +655,74 @@ button:hover{background:#3a0912;box-shadow:0 0 12px rgba(255,35,65,.5)}
 
 <section id="login" class="hidden">
   <div class="login-glitch"></div>
-  <div class="box">
+  <div id="toad-wrap">
+    <svg id="toad" viewBox="0 0 400 320" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="frogBodyGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#4a9dc7"/>
+          <stop offset="32%" stop-color="#57ad9e"/>
+          <stop offset="62%" stop-color="#86cd7a"/>
+          <stop offset="100%" stop-color="#dccd8e"/>
+        </linearGradient>
+        <radialGradient id="frogBellyGrad" cx="50%" cy="25%" r="80%">
+          <stop offset="0%" stop-color="#fdf1e3"/>
+          <stop offset="100%" stop-color="#efd7c3"/>
+        </radialGradient>
+        <linearGradient id="legGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#5fae86"/>
+          <stop offset="100%" stop-color="#eaa998"/>
+        </linearGradient>
+      </defs>
+
+      <!-- задние лапки, выглядывают по бокам -->
+      <path d="M104 238 C 62 252, 24 274, 14 306 C 46 306, 74 298, 100 278 Z" fill="url(#legGrad)" opacity=".9"/>
+      <path d="M296 238 C 338 252, 376 274, 386 306 C 354 306, 326 298, 300 278 Z" fill="url(#legGrad)" opacity=".9" transform="translate(0,0)"/>
+
+      <!-- тело -->
+      <path id="frog-body" d="M62 172 C40 96,95 34,200 32 C305 34,360 96,338 172 C333 236,297 278,200 280 C103 278,67 236,62 172 Z" fill="url(#frogBodyGrad)" stroke="#2e2a1c" stroke-width="1.5" opacity=".97"/>
+
+      <!-- живот -->
+      <ellipse cx="200" cy="196" rx="98" ry="84" fill="url(#frogBellyGrad)" opacity=".93"/>
+
+      <!-- передняя левая лапка с пальцами -->
+      <g id="frog-leg-l">
+        <path d="M98 234 C 60 250,28 272,20 300" fill="none" stroke="url(#legGrad)" stroke-width="24" stroke-linecap="round"/>
+        <g stroke="#e6a294" stroke-width="8" stroke-linecap="round">
+          <line x1="20" y1="300" x2="7" y2="313"/>
+          <line x1="28" y1="305" x2="20" y2="322"/>
+          <line x1="38" y1="307" x2="34" y2="325"/>
+          <line x1="48" y1="303" x2="49" y2="323"/>
+        </g>
+      </g>
+      <use href="#frog-leg-l" transform="scale(-1,1) translate(-400,0)"/>
+
+      <!-- глаза -->
+      <g id="toad-eye-l">
+        <circle cx="138" cy="94" r="33" fill="#141c20"/>
+        <circle cx="138" cy="94" r="33" fill="none" stroke="#0a0f11" stroke-width="1"/>
+        <ellipse id="toad-pupil-l" cx="132" cy="86" rx="9" ry="9" fill="#eef6f2"/>
+      </g>
+      <g id="toad-eye-r">
+        <circle cx="262" cy="94" r="33" fill="#141c20"/>
+        <circle cx="262" cy="94" r="33" fill="none" stroke="#0a0f11" stroke-width="1"/>
+        <ellipse id="toad-pupil-r" cx="256" cy="86" rx="9" ry="9" fill="#eef6f2"/>
+      </g>
+
+      <!-- ноздри -->
+      <circle cx="182" cy="128" r="2.6" fill="#2e2015" opacity=".7"/>
+      <circle cx="218" cy="128" r="2.6" fill="#2e2015" opacity=".7"/>
+
+      <!-- рот -->
+      <path id="toad-mouth-top" d="M138 152 Q200 160 262 152 Q200 156 138 152 Z" fill="#241309"/>
+      <path id="toad-mouth-bottom" d="M138 152 Q200 148 262 152 Q200 150 138 152 Z" fill="#241309"/>
+
+      <!-- лёгкий румянец -->
+      <ellipse cx="150" cy="140" rx="14" ry="8" fill="#e8a58f" opacity=".35"/>
+      <ellipse cx="250" cy="140" rx="14" ry="8" fill="#e8a58f" opacity=".35"/>
+    </svg>
+    <div id="toad-hex"></div>
+  </div>
+  <div class="box" id="loginBox">
     <div class="title" id="authTitle">ДОСТУП // 04</div>
     <div class="sub" id="authSub">ВОССТАНОВЛЕННЫЙ ИНТЕРФЕЙС ХРАНИЛИЩА<br>БАЗА ДАННЫХ: SUPABASE<br>ВВЕДИТЕ ПАРОЛЬ ДЛЯ ПРОДОЛЖЕНИЯ</div>
     <form id="loginForm">
@@ -614,6 +731,7 @@ button:hover{background:#3a0912;box-shadow:0 0 12px rgba(255,35,65,.5)}
     <div id="status" class="status"></div>
   </div>
 </section>
+<div id="login-flash"></div>
 
 <section id="app" class="hidden">
   <header class="top">
@@ -685,6 +803,29 @@ function spawnNoise(){
   layer.appendChild(s);
  }
 }
+function spawnHexLabels(){
+ const box=$("toad-hex"); if(!box) return;
+ const labels=["0xA3F9","SYS//BREACH","ERR_204","0xFF00","DECRYPT...","0x00E1","NODE_7A","CORRUPT","0x9B2C","LINK_LOST"];
+ const positions=[
+  {left:"6%",top:"18%"},{left:"84%",top:"14%"},{left:"2%",top:"55%"},
+  {left:"90%",top:"52%"},{left:"14%",top:"78%"},{left:"78%",top:"80%"},
+ ];
+ positions.forEach((pos,i)=>{
+  const el=document.createElement("div");
+  el.className="hex-label";
+  el.textContent=labels[Math.floor(Math.random()*labels.length)];
+  el.style.left=pos.left; el.style.top=pos.top;
+  el.style.color = i%2 ? "#ff2de0" : "#00eaff";
+  el.style.animationDelay=(Math.random()*2)+"s, "+(Math.random()*2)+"s";
+  box.appendChild(el);
+ });
+ setInterval(()=>{
+  const els=box.querySelectorAll(".hex-label");
+  const el=els[Math.floor(Math.random()*els.length)];
+  if(el) el.textContent=labels[Math.floor(Math.random()*labels.length)];
+ }, 900);
+}
+spawnHexLabels();
 function playBoot(){
  return new Promise(resolve=>{
   const boot=$("boot-screen"), textEl=$("boot-text"), cursor=$("boot-cursor");
@@ -889,13 +1030,32 @@ async function enterApp(){
  subscribeRealtime();
 }
 
+function playToadEat(){
+ return new Promise(resolve=>{
+  const wrap=$("toad-wrap"), box=$("loginBox"), flash=$("login-flash");
+  if(!wrap||!box){ resolve(); return; }
+  wrap.classList.add("chomp");
+  setTimeout(()=>{
+   box.classList.add("eaten");
+   setTimeout(()=>{
+    if(flash) flash.classList.add("go");
+    setTimeout(()=>{
+     $("login").classList.add("hidden");
+     resolve();
+    }, 260);
+   }, 480);
+  }, 200);
+ });
+}
 $("loginForm").onsubmit=async e=>{
  e.preventDefault();
  if(!configOk){ $("status").textContent="СНАЧАЛА НАСТРОЙТЕ SUPABASE_URL И SUPABASE_ANON_KEY"; return; }
  const pass=$("pass").value;
  if(pass!==SITE_PASSWORD){ $("status").textContent="ДОСТУП ЗАПРЕЩЁН // НЕВЕРНЫЙ ПАРОЛЬ"; $("pass").value=""; return; }
  $("status").textContent="ДОСТУП РАЗРЕШЁН";
- setTimeout(enterApp,200);
+ $("submitBtn").disabled=true;
+ await playToadEat();
+ await enterApp();
 };
 
 $("text").oninput=()=>{if(file)file.content=$("text").value};
@@ -944,6 +1104,9 @@ $("lockBtn").onclick=()=>{
  file=null;
  $("app").classList.add("hidden"); $("login").classList.remove("hidden");
  $("pass").value=""; $("status").textContent="";
+ $("toad-wrap").classList.remove("chomp");
+ $("loginBox").classList.remove("eaten");
+ $("submitBtn").disabled=false;
 };
 
 // ===================== ЗАГРУЗКА КАРТИНОК =====================
