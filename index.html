@@ -632,7 +632,7 @@ button:hover{background:#3a0912;box-shadow:0 0 12px rgba(255,35,65,.5)}
       <div id="searchResults" class="hidden"></div>
     </aside>
     <section class="editor">
-      <div id="empty" class="empty">ВЫБЕРИТЕ ФАЙЛ ИЗ КАТАЛОГА<br>ИЛИ СОЗДАЙТЕ НОВЫЙ ФАЙЛ.</div>
+      <div id="empty" class="empty">ВЫБЕРИТЕ ФАЙЛ ИЗ КАТАЛОГА<br>ИЛИ СОЗДАЙТЕ НОВЫЙ ФАЙЛ.<div id="deleteFolderWrap" class="hidden" style="margin-top:18px"><button id="deleteFolderBtn">УДАЛИТЬ ЭТУ ПАПКУ</button></div></div>
       <div id="view" class="hidden">
         <div class="filebar"><div><div id="fname" class="fname"></div><div id="meta" class="meta"></div></div><button id="deleteBtn">УДАЛИТЬ</button></div>
         <div id="tags" class="tags"></div>
@@ -799,7 +799,10 @@ function render(){
  }
  add(fs,0)
 }
-function empty(){$("empty").classList.remove("hidden");$("view").classList.add("hidden");$("path").textContent=pathOf(folder)}
+function empty(){
+ $("empty").classList.remove("hidden");$("view").classList.add("hidden");$("path").textContent=pathOf(folder);
+ $("deleteFolderWrap").classList.toggle("hidden", !folder || folder.id===null);
+}
 function open(x){
  file=x;folder=parentOf(x)||fs;
  $("empty").classList.add("hidden");$("view").classList.remove("hidden");
@@ -919,9 +922,20 @@ $("folderBtn").onclick=()=>modal("НОВАЯ ПАПКА",async n=>{
 });
 $("deleteBtn").onclick=async()=>{
  if(!file) return;
+ if(!confirm("Удалить «"+file.name+"»?")) return;
  const p=parentOf(file);
  const {error}=await sb.from("files").delete().eq("id",file.id);
- if(!error){ folder=p||fs; file=null; await loadFiles(); empty(); }
+ if(error){ alert("ОШИБКА УДАЛЕНИЯ: "+error.message); return; }
+ folder=p||fs; file=null; await loadFiles(); empty();
+};
+$("deleteFolderBtn").onclick=async()=>{
+ if(!folder || folder.id===null) return; // корень удалить нельзя
+ const count=allNodesFlat(folder).length;
+ if(!confirm("Удалить папку «"+folder.name+"»"+(count?" и всё её содержимое ("+count+" элем.)":"")+"?")) return;
+ const p=parentOf(folder);
+ const {error}=await sb.from("files").delete().eq("id",folder.id);
+ if(error){ alert("ОШИБКА УДАЛЕНИЯ ПАПКИ: "+error.message); return; }
+ folder=p||fs; file=null; await loadFiles(); empty();
 };
 $("create").onclick=()=>{if(action)action($("modalInput").value)};
 $("cancel").onclick=close;$("modalInput").onkeydown=e=>{if(e.key==="Enter")$("create").click();if(e.key==="Escape")close()};
