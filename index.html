@@ -555,7 +555,7 @@
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text);font-family:var(--font)}
 body{overflow-x:hidden}.hidden{display:none!important}
 .crt{position:fixed;inset:0;pointer-events:none;z-index:999;background:repeating-linear-gradient(0deg,rgba(0,0,0,.18) 0 1px,transparent 1px 4px);box-shadow:inset 0 0 140px rgba(0,0,0,.7)}
-#login{min-height:100vh;display:flex;align-items:center;justify-content:center;position:relative;background:radial-gradient(circle,rgba(0,234,255,.07),transparent 45%),#030006;overflow:hidden}
+#login{min-height:100vh;display:flex;align-items:center;justify-content:center;position:relative;z-index:0;background:radial-gradient(circle,rgba(0,234,255,.07),transparent 45%),#030006;overflow:hidden}
 .login-glitch{position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent 0 5px,rgba(255,225,60,.05) 6px 7px);animation:g .18s steps(2) infinite}
 .box{width:min(460px,90vw);padding:32px;border:1px solid #b89a12;background:rgba(8,6,0,.94);position:relative;z-index:2;box-shadow:0 0 18px rgba(255,225,60,.22),0 0 34px rgba(255,45,224,.12);transition:transform .55s cubic-bezier(.6,-0.2,.85,.2),opacity .5s ease .1s}
 .box.eaten{transform:translateY(120px) scale(.15) rotate(8deg);opacity:0}
@@ -571,7 +571,7 @@ body{overflow-x:hidden}.hidden{display:none!important}
 button{font:inherit;background:#21070d;color:var(--red);border:1px solid #a9273c;padding:11px 15px;cursor:pointer}
 button:hover{background:#3a0912;box-shadow:0 0 12px rgba(255,35,65,.5)}
 .status{min-height:22px;margin-top:14px;font-size:12px;color:#ff5168}
-#app{min-height:100vh;position:relative;background:radial-gradient(circle at 50% 0,rgba(160,10,35,.15),transparent 45%),linear-gradient(#100207,#050103 70%)}
+#app{min-height:100vh;position:relative;z-index:0;background:radial-gradient(circle at 50% 0,rgba(160,10,35,.15),transparent 45%),linear-gradient(#100207,#050103 70%)}
 .top{position:sticky;top:0;z-index:20;background:rgba(8,2,5,.95);border-bottom:1px solid #5d1826;padding:12px 16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .brand{color:var(--red);font-weight:bold;letter-spacing:2px;margin-right:auto}.path{color:#9d6570;font-size:12px}
 .workspace{display:grid;grid-template-columns:270px 1fr;min-height:calc(100vh - 55px)}
@@ -779,15 +779,24 @@ scatterMiniToads("mini-toads-app", 7);
 
 
 // ===================== МУЗЫКА (генерируется в браузере, без файлов) =====================
-let audioCtx=null, masterGain=null, musicOn=false, arpTimer=null, arpIndex=0;
-const arpNotes=[220.00,261.63,246.94,293.66,220.00,196.00,220.00,261.63];
-const bassNote=55.00;
+let audioCtx=null, masterGain=null, musicOn=false, stepTimer=null, stepIndex=0, noiseBuffer=null, padOsc1=null, padOsc2=null, padGain=null, padFilter=null, padLfo=null;
+
+// 16-шаговый арпеджио-риф (ля-фригийский лад — типичное киберпанк-звучание)
+const arpNotes=[220.00,261.63,246.94,293.66,220.00,196.00,220.00,261.63,
+                246.94,293.66,329.63,293.66,246.94,220.00,196.00,220.00];
+// басовая линия, меняется каждые 2 шага (8 нот на цикл)
+const bassNotes=[55.00,55.00,82.41,55.00,55.00,61.74,73.42,55.00];
+
 function ensureAudio(){
  if(audioCtx) return;
  audioCtx=new (window.AudioContext||window.webkitAudioContext)();
  masterGain=audioCtx.createGain();
- masterGain.gain.value=0.16;
+ masterGain.gain.value=0.17;
  masterGain.connect(audioCtx.destination);
+ const bufSize=audioCtx.sampleRate*0.05;
+ noiseBuffer=audioCtx.createBuffer(1,bufSize,audioCtx.sampleRate);
+ const data=noiseBuffer.getChannelData(0);
+ for(let i=0;i<bufSize;i++) data[i]=Math.random()*2-1;
 }
 function playNote(freq, time, dur, type, gainPeak, filterFreq){
  const osc=audioCtx.createOscillator();
@@ -803,22 +812,67 @@ function playNote(freq, time, dur, type, gainPeak, filterFreq){
  osc.connect(filt); filt.connect(g); g.connect(masterGain);
  osc.start(time); osc.stop(time+dur+0.03);
 }
+function playKick(time){
+ const osc=audioCtx.createOscillator();
+ osc.type="sine";
+ osc.frequency.setValueAtTime(150,time);
+ osc.frequency.exponentialRampToValueAtTime(42,time+0.09);
+ const g=audioCtx.createGain();
+ g.gain.setValueAtTime(0.55,time);
+ g.gain.exponentialRampToValueAtTime(0.001,time+0.17);
+ osc.connect(g); g.connect(masterGain);
+ osc.start(time); osc.stop(time+0.19);
+}
+function playHat(time, peak){
+ const src=audioCtx.createBufferSource();
+ src.buffer=noiseBuffer;
+ const g=audioCtx.createGain();
+ g.gain.setValueAtTime(peak,time);
+ g.gain.exponentialRampToValueAtTime(0.001,time+0.045);
+ const hp=audioCtx.createBiquadFilter();
+ hp.type="highpass"; hp.frequency.value=6500;
+ src.connect(hp); hp.connect(g); g.connect(masterGain);
+ src.start(time); src.stop(time+0.05);
+}
+function startPad(){
+ padGain=audioCtx.createGain();
+ padGain.gain.value=0.05;
+ padFilter=audioCtx.createBiquadFilter();
+ padFilter.type="lowpass";
+ padFilter.frequency.value=700;
+ padOsc1=audioCtx.createOscillator(); padOsc1.type="sawtooth"; padOsc1.frequency.value=110;
+ padOsc2=audioCtx.createOscillator(); padOsc2.type="sawtooth"; padOsc2.frequency.value=110*1.5; // квинта
+ padOsc1.connect(padFilter); padOsc2.connect(padFilter); padFilter.connect(padGain); padGain.connect(masterGain);
+ padLfo=audioCtx.createOscillator(); padLfo.type="sine"; padLfo.frequency.value=0.08;
+ const lfoGain=audioCtx.createGain(); lfoGain.gain.value=380;
+ padLfo.connect(lfoGain); lfoGain.connect(padFilter.frequency);
+ padOsc1.start(); padOsc2.start(); padLfo.start();
+}
+function stopPad(){
+ [padOsc1,padOsc2,padLfo].forEach(o=>{ if(o){ try{o.stop();}catch(e){} } });
+ padOsc1=padOsc2=padLfo=padGain=padFilter=null;
+}
 function startMusic(){
  ensureAudio();
  if(audioCtx.state==="suspended") audioCtx.resume();
- arpIndex=0;
+ startPad();
+ stepIndex=0;
  const stepDur=0.22;
  function scheduleStep(){
   const t=audioCtx.currentTime+0.02;
-  if(arpIndex%2===0){ playNote(bassNote, t, stepDur*1.8, "sawtooth", 0.3, 380); }
-  playNote(arpNotes[arpIndex%arpNotes.length], t, stepDur*0.85, "square", 0.1, 1600);
-  arpIndex++;
+  const bar=stepIndex%16;
+  if(bar%2===0){ playNote(bassNotes[(bar/2)%bassNotes.length], t, stepDur*1.8, "sawtooth", 0.32, 420); }
+  if(bar%4===0){ playKick(t); }
+  if(bar%2===1){ playHat(t, bar%4===3?0.09:0.045); }
+  playNote(arpNotes[bar], t, stepDur*0.85, "square", 0.095, 1700);
+  stepIndex++;
  }
  scheduleStep();
- arpTimer=setInterval(scheduleStep, stepDur*1000);
+ stepTimer=setInterval(scheduleStep, stepDur*1000);
 }
 function stopMusic(){
- if(arpTimer){ clearInterval(arpTimer); arpTimer=null; }
+ if(stepTimer){ clearInterval(stepTimer); stepTimer=null; }
+ stopPad();
 }
 function updateMusicBtn(){ $("musicToggle").textContent = musicOn ? "🔊 МУЗЫКА" : "🔇 МУЗЫКА"; }
 $("musicToggle").onclick=()=>{
