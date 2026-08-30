@@ -620,7 +620,7 @@ body{overflow-x:hidden}.hidden{display:none!important}
 button{font:inherit;background:#21070d;color:var(--red);border:1px solid #a9273c;padding:11px 15px;cursor:pointer}
 button:hover{background:#3a0912;box-shadow:0 0 12px rgba(255,35,65,.5)}
 .status{min-height:22px;margin-top:14px;font-size:12px;color:#ff5168}
-#app{min-height:100vh;background:radial-gradient(circle at 50% 0,rgba(160,10,35,.15),transparent 45%),linear-gradient(#100207,#050103 70%)}
+#app{min-height:100vh;position:relative;background:radial-gradient(circle at 50% 0,rgba(160,10,35,.15),transparent 45%),linear-gradient(#100207,#050103 70%)}
 .top{position:sticky;top:0;z-index:20;background:rgba(8,2,5,.95);border-bottom:1px solid #5d1826;padding:12px 16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .brand{color:var(--red);font-weight:bold;letter-spacing:2px;margin-right:auto}.path{color:#9d6570;font-size:12px}
 .workspace{display:grid;grid-template-columns:270px 1fr;min-height:calc(100vh - 55px)}
@@ -643,6 +643,10 @@ button:hover{background:#3a0912;box-shadow:0 0 12px rgba(255,35,65,.5)}
 .empty{padding:45px;border:1px dashed #4e1521;color:#784652;text-align:center}
 .modal{position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.78);display:flex;align-items:center;justify-content:center}.modalbox{width:min(430px,90vw);padding:22px;background:#0c0206;border:1px solid #9b2138}.modalbox h3{color:#ff657b;margin-top:0}.modalbox input{width:100%;padding:11px;background:#050103;color:#eee;border:1px solid #5f1826;margin:8px 0 14px}.actions{text-align:right}
 @keyframes g{50%{transform:translate(2px,-1px)}100%{transform:translate(-1px,1px)}}@media(max-width:760px){.workspace{grid-template-columns:1fr}.sidebar{border-right:0;border-bottom:1px solid #4e1521}}
+.mini-toads-layer{position:absolute;inset:0;z-index:-1;pointer-events:none;overflow:hidden}
+.mini-toad-inst{position:absolute;opacity:.22;animation:miniToadPulse 6s ease-in-out infinite}
+.mini-toad-inst text{font-family:var(--font-mono);font-size:13px;dominant-baseline:middle;text-anchor:middle}
+@keyframes miniToadPulse{0%,100%{opacity:.14}50%{opacity:.3}}
 #musicToggle{
   position:fixed;top:14px;right:14px;z-index:10001;
   font:12px var(--font-mono);letter-spacing:1px;
@@ -681,6 +685,32 @@ button:hover{background:#3a0912;box-shadow:0 0 12px rgba(255,35,65,.5)}
 <div class="crt"></div>
 <button id="musicToggle" type="button">🔇 МУЗЫКА</button>
 
+<svg width="0" height="0" style="position:absolute">
+  <symbol id="miniToad" viewBox="0 0 200 170">
+    <defs>
+      <clipPath id="miniToadClip">
+        <path d="M100 22 C 89 22,85 32,77 39 C 54 39,30 58,27 87 C 25 111,36 128,62 134 C 74 136,86 124,100 124 C 114 124,126 136,138 134 C 164 128,175 111,173 87 C 170 58,146 39,123 39 C 115 32,111 22,100 22 Z"/>
+      </clipPath>
+    </defs>
+    <rect x="0" y="0" width="200" height="170" fill="#050400" clip-path="url(#miniToadClip)"/>
+    <g class="mini-tdig" clip-path="url(#miniToadClip)">
+      <text x="45" y="45" fill="#ffe23f">4</text><text x="60" y="45" fill="#7fdf6a">1</text><text x="75" y="45" fill="#ffe23f">0</text>
+      <text x="120" y="45" fill="#caa000">7</text><text x="135" y="45" fill="#ffe23f">2</text><text x="150" y="45" fill="#7fdf6a">9</text>
+      <text x="35" y="62" fill="#7fdf6a">3</text><text x="50" y="62" fill="#ffe23f">8</text><text x="65" y="62" fill="#3fae4a">0</text><text x="80" y="62" fill="#ffe23f">1</text>
+      <text x="115" y="62" fill="#caa000">6</text><text x="130" y="62" fill="#7fdf6a">5</text><text x="145" y="62" fill="#ffe23f">4</text><text x="160" y="62" fill="#3fae4a">2</text>
+      <text x="30" y="79" fill="#ffe23f">9</text><text x="45" y="79" fill="#7fdf6a">7</text><text x="60" y="79" fill="#ffe23f">1</text><text x="75" y="79" fill="#caa000">3</text><text x="90" y="79" fill="#7fdf6a">0</text>
+      <text x="105" y="79" fill="#ffe23f">8</text><text x="120" y="79" fill="#3fae4a">2</text><text x="135" y="79" fill="#ffe23f">6</text><text x="150" y="79" fill="#caa000">4</text><text x="165" y="79" fill="#7fdf6a">1</text>
+      <text x="30" y="96" fill="#7fdf6a">0</text><text x="45" y="96" fill="#ffe23f">5</text><text x="60" y="96" fill="#3fae4a">3</text><text x="75" y="96" fill="#ffe23f">9</text><text x="90" y="96" fill="#caa000">1</text>
+      <text x="105" y="96" fill="#7fdf6a">4</text><text x="120" y="96" fill="#ffe23f">0</text><text x="135" y="96" fill="#3fae4a">7</text><text x="150" y="96" fill="#ffe23f">2</text><text x="165" y="96" fill="#caa000">8</text>
+      <text x="40" y="113" fill="#ffe23f">6</text><text x="55" y="113" fill="#7fdf6a">2</text><text x="70" y="113" fill="#ffe23f">9</text><text x="85" y="113" fill="#3fae4a">0</text>
+      <text x="115" y="113" fill="#7fdf6a">5</text><text x="130" y="113" fill="#ffe23f">1</text><text x="145" y="113" fill="#caa000">3</text><text x="160" y="113" fill="#ffe23f">7</text>
+      <text x="60" y="128" fill="#7fdf6a">8</text><text x="80" y="128" fill="#ffe23f">4</text><text x="120" y="128" fill="#3fae4a">6</text><text x="140" y="128" fill="#ffe23f">0</text>
+    </g>
+    <circle cx="65" cy="70" r="16" fill="#fdf6d8"/><ellipse cx="65" cy="71" rx="11" ry="13" fill="#0c0900"/>
+    <circle cx="135" cy="70" r="16" fill="#fdf6d8"/><ellipse cx="135" cy="71" rx="11" ry="13" fill="#0c0900"/>
+  </symbol>
+</svg>
+
 <section id="boot-screen">
   <div id="noise-layer"></div>
   <div class="glitch-bar"></div>
@@ -691,6 +721,7 @@ button:hover{background:#3a0912;box-shadow:0 0 12px rgba(255,35,65,.5)}
 
 <section id="login" class="hidden">
   <div class="login-glitch"></div>
+  <div id="mini-toads-login" class="mini-toads-layer"></div>
   <div id="toad-wrap">
     <svg id="toad" viewBox="0 0 400 320" xmlns="http://www.w3.org/2000/svg">
       <defs>
@@ -761,6 +792,7 @@ button:hover{background:#3a0912;box-shadow:0 0 12px rgba(255,35,65,.5)}
 <div id="login-flash"></div>
 
 <section id="app" class="hidden">
+  <div id="mini-toads-app" class="mini-toads-layer"></div>
   <header class="top">
     <div class="brand">ВОССТАНОВЛЕНО // ФАЙЛОВАЯ СИСТЕМА</div>
     <div id="path" class="path">/root</div>
@@ -879,6 +911,28 @@ function buildToadDigits(){
  fillDigits("toad-mouth-digits", 145, 255, 75, 245, 6, 7, ()=>Math.random()<0.6?"#3a0810":"#1a0d05", 8);
 }
 buildToadDigits();
+
+function scatterMiniToads(containerId, count){
+ const box=document.getElementById(containerId); if(!box) return;
+ for(let i=0;i<count;i++){
+  const wrap=document.createElementNS("http://www.w3.org/2000/svg","svg");
+  wrap.setAttribute("viewBox","0 0 200 170");
+  const size=40+Math.random()*50;
+  wrap.setAttribute("width",size); wrap.setAttribute("height",size*170/200);
+  wrap.classList.add("mini-toad-inst");
+  wrap.style.left=(Math.random()*92)+"%";
+  wrap.style.top=(Math.random()*88)+"%";
+  wrap.style.animationDelay=(-Math.random()*6)+"s";
+  wrap.style.transform="rotate("+(Math.random()*16-8)+"deg)";
+  const use=document.createElementNS("http://www.w3.org/2000/svg","use");
+  use.setAttribute("href","#miniToad");
+  wrap.appendChild(use);
+  box.appendChild(wrap);
+ }
+}
+scatterMiniToads("mini-toads-login", 7);
+scatterMiniToads("mini-toads-app", 7);
+
 
 // ===================== МУЗЫКА (генерируется в браузере, без файлов) =====================
 let audioCtx=null, masterGain=null, musicOn=false, arpTimer=null, arpIndex=0;
