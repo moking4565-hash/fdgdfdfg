@@ -557,61 +557,12 @@ body{overflow-x:hidden}.hidden{display:none!important}
 .crt{position:fixed;inset:0;pointer-events:none;z-index:999;background:repeating-linear-gradient(0deg,rgba(0,0,0,.18) 0 1px,transparent 1px 4px);box-shadow:inset 0 0 140px rgba(0,0,0,.7)}
 #login{min-height:100vh;display:flex;align-items:center;justify-content:center;position:relative;background:radial-gradient(circle,rgba(0,234,255,.07),transparent 45%),#030006;overflow:hidden}
 .login-glitch{position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent 0 5px,rgba(255,225,60,.05) 6px 7px);animation:g .18s steps(2) infinite}
-#toad-wrap{position:absolute;left:50%;bottom:-4vh;transform:translateX(-50%);width:min(1100px,150vw);z-index:1;opacity:.97;filter:drop-shadow(0 0 26px rgba(255,225,60,.35)) drop-shadow(0 0 40px rgba(255,45,224,.14))}
-#toad{width:100%;height:auto;display:block;animation:toadGlitch 1.5s infinite,toadHologram 4.2s ease-in-out infinite}
-#toad-eye-l,#toad-eye-r{animation:toadBlink 4.4s infinite;transform-box:fill-box;transform-origin:center}
-#toad-pupil-l,#toad-pupil-r{animation:toadPupilGlitch 1.5s infinite}
-.digit-col{animation-name:digitWalk;animation-timing-function:linear;animation-iteration-count:infinite}
-@keyframes digitWalk{from{transform:translateY(0)}to{transform:translateY(calc(-1 * var(--cycleH,320px)))}}
-.tdig{font-family:var(--font-mono);dominant-baseline:middle;text-anchor:middle;animation:digitFlicker 1.9s ease-in-out infinite}
-@keyframes toadPupilGlitch{0%,84%,100%{fill:#4a3800;ry:7}85%{fill:#ff2d55;ry:2}86%{fill:#ffe23f;ry:7}87%{fill:#ffffff;ry:3}88%{fill:#4a3800;ry:7}}
-@keyframes toadBlink{0%,92%,100%{transform:scaleY(1)}94%{transform:scaleY(.08)}96%{transform:scaleY(1)}}
-#toad-mouth-top,#toad-mouth-bottom{transition:d .45s ease}
-#toad-wrap.chomp #toad-mouth-top{d:path("M160 178 Q200 118 240 178 Q200 148 160 178 Z")}
-#toad-wrap.chomp #toad-mouth-bottom{d:path("M160 178 Q200 235 240 178 Q200 205 160 178 Z")}
-@keyframes digitFlicker{0%,100%{opacity:.9}30%{opacity:.15}40%{opacity:1}58%{opacity:.25}75%{opacity:.9}88%{opacity:.3}}
-@keyframes toadGlitch{
- 0%,58%,100%{filter:none;transform:translate(0,0) skewX(0)}
- 59%{filter:drop-shadow(9px 0 0 #ff2de0) drop-shadow(-9px 0 0 #22e0ff);transform:translate(-10px,1px) skewX(3deg)}
- 60%{filter:drop-shadow(-10px 0 0 #ff2de0) drop-shadow(10px 0 0 #22e0ff);transform:translate(7px,-2px) skewX(-4deg)}
- 61%{filter:none;transform:translate(0,3px) skewX(0)}
- 62%{filter:drop-shadow(6px 0 0 #ff003c) drop-shadow(-6px 0 0 #ffe23f);transform:translate(-4px,0)}
- 63%{filter:none;transform:translate(2px,-1px)}
- 68%,70%{filter:drop-shadow(-7px 0 0 #22e0ff) drop-shadow(7px 0 0 #ff2de0);transform:translate(4px,1px)}
- 69%,71%{filter:none;transform:translate(0,0)}
- 78%{filter:drop-shadow(5px 0 0 #ff2de0);transform:translate(-3px,0) skewX(2deg)}
- 79%{filter:drop-shadow(-5px 0 0 #22e0ff);transform:translate(3px,0) skewX(-2deg)}
- 80%,82%{filter:none;transform:translate(0,0) skewX(0)}
- 90%{filter:drop-shadow(4px 0 0 #ffe23f);transform:translate(-2px,2px)}
- 91%{filter:none;transform:translate(0,0)}
-}
-@keyframes toadHologram{0%,100%{opacity:1}34%{opacity:1}36%{opacity:.4}38%{opacity:1}64%{opacity:1}65.5%{opacity:.2}67%{opacity:1}}
-#toad-wrap::before,#toad-wrap::after{content:"";position:absolute;inset:0;pointer-events:none;mix-blend-mode:screen}
-#toad-wrap::before{
-  background:repeating-linear-gradient(0deg,transparent 0 3px,rgba(255,225,60,.11) 4px 5px);
-  animation:cyanScan .14s steps(2) infinite;
-}
-#toad-wrap::after{
-  background:linear-gradient(90deg,transparent 0%,rgba(255,225,60,.26) 40%,rgba(255,45,224,.22) 60%,transparent 100%);
-  opacity:0;
-  animation:toadSlice 1.9s steps(1) infinite;
-}
-@keyframes cyanScan{0%{transform:translateY(0)}35%{transform:translateY(2px)}36%{transform:translateY(-1px)}70%{transform:translateY(1px)}100%{transform:translateY(0)}}
-@keyframes toadSlice{
- 0%,70%,100%{opacity:0;transform:translateX(0);clip-path:inset(0 0 0 0)}
- 70.5%{opacity:.95;transform:translateX(-18px);clip-path:inset(20% 0 56% 0)}
- 71.4%{opacity:.95;transform:translateX(14px);clip-path:inset(60% 0 10% 0)}
- 72.2%{opacity:.9;transform:translateX(-10px);clip-path:inset(4% 0 80% 0)}
- 73%{opacity:.9;transform:translateX(8px);clip-path:inset(40% 0 30% 0)}
- 73.7%{opacity:0}
-}
-#toad-hex{position:absolute;inset:0;pointer-events:none;overflow:visible}
-.hex-label{position:absolute;font-family:var(--font-mono);font-size:11px;color:#ffe23f;text-shadow:0 0 6px currentColor;white-space:nowrap;animation:hexFloat 3.4s ease-in-out infinite,digitFlicker 1.8s ease-in-out infinite}
-@keyframes hexFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
 .box{width:min(460px,90vw);padding:32px;border:1px solid #b89a12;background:rgba(8,6,0,.94);position:relative;z-index:2;box-shadow:0 0 18px rgba(255,225,60,.22),0 0 34px rgba(255,45,224,.12);transition:transform .55s cubic-bezier(.6,-0.2,.85,.2),opacity .5s ease .1s}
 .box.eaten{transform:translateY(120px) scale(.15) rotate(8deg);opacity:0}
 #login-flash{position:fixed;inset:0;background:#fff;opacity:0;pointer-events:none;z-index:50}
 #login-flash.go{animation:loginFlash .5s ease}
+#toad-tongue{position:fixed;left:0;top:0;height:9px;width:0;background:linear-gradient(90deg,#ff8fa3,#ff3d63);border-radius:5px;transform-origin:0 50%;z-index:60;pointer-events:none;box-shadow:0 0 10px rgba(255,60,100,.65)}
+#toad-tongue::after{content:"";position:absolute;right:-5px;top:50%;transform:translateY(-50%);width:14px;height:14px;border-radius:50%;background:#ff3d63;box-shadow:0 0 10px rgba(255,60,100,.7)}
 @keyframes loginFlash{0%{opacity:0}12%{opacity:1}100%{opacity:0}}
 .title{color:#ffe23f;font-size:clamp(25px,5vw,40px);letter-spacing:4px;text-shadow:0 0 14px rgba(255,225,60,.85),0 0 26px rgba(255,45,224,.3)}
 .sub{color:#c9b25a;font-size:12px;line-height:1.8;margin:10px 0 24px}
@@ -722,64 +673,6 @@ button:hover{background:#3a0912;box-shadow:0 0 12px rgba(255,35,65,.5)}
 <section id="login" class="hidden">
   <div class="login-glitch"></div>
   <div id="mini-toads-login" class="mini-toads-layer"></div>
-  <div id="toad-wrap">
-    <svg id="toad" viewBox="0 0 400 320" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <path id="shapeBody" d="M200 42 C 178 42,170 62,158 76 C 112 76,60 114,54 172 C 50 222,72 258,126 270 C 150 275,175 250,200 250 C 225 250,250 275,274 270 C 328 258,350 222,346 172 C 340 114,288 76,242 76 C 230 62,222 42,200 42 Z"/>
-        <path id="shapeLegBackL" d="M126 246 C 92 258,58 276,50 302 C 76 302,98 294,120 280 Z"/>
-        <path id="shapeLegBackR" d="M274 246 C 308 258,342 276,350 302 C 324 302,302 294,280 280 Z"/>
-        <path id="shapeLegFrontL" d="M138 236 C 110 252,86 274,78 306 C 94 312,112 306,124 292 C 138 300,152 294,160 280 Z"/>
-        <path id="shapeLegFrontR" d="M262 236 C 290 252,314 274,322 306 C 306 312,288 306,276 292 C 262 300,248 294,240 280 Z"/>
-        <clipPath id="toadClip">
-          <use href="#shapeBody"/>
-          <use href="#shapeLegBackL"/>
-          <use href="#shapeLegBackR"/>
-          <use href="#shapeLegFrontL"/>
-          <use href="#shapeLegFrontR"/>
-        </clipPath>
-        <clipPath id="eyeRingClipL"><circle cx="132" cy="140" r="34"/></clipPath>
-        <clipPath id="eyeRingClipR"><circle cx="268" cy="140" r="34"/></clipPath>
-        <clipPath id="eyePupilClipL"><ellipse cx="132" cy="142" rx="24" ry="27"/></clipPath>
-        <clipPath id="eyePupilClipR"><ellipse cx="268" cy="142" rx="24" ry="27"/></clipPath>
-        <path id="toad-mouth-top" d="M178 188 Q200 202 222 188 Q200 194 178 188 Z"/>
-        <path id="toad-mouth-bottom" d="M178 188 Q200 182 222 188 Q200 184 178 188 Z"/>
-        <clipPath id="mouthClip">
-          <use href="#toad-mouth-top"/>
-          <use href="#toad-mouth-bottom"/>
-        </clipPath>
-      </defs>
-
-      <!-- тень -->
-      <ellipse cx="200" cy="292" rx="185" ry="24" fill="#6b5300" opacity=".45"/>
-
-      <!-- чёрная подложка (как в "Матрице") -->
-      <rect x="0" y="0" width="400" height="320" fill="#050400" clip-path="url(#toadClip)"/>
-
-      <!-- заполнение фигуры шагающими цифрами -->
-      <g id="toad-digits" clip-path="url(#toadClip)"></g>
-
-      <!-- глаза из цифр -->
-      <g id="toad-eye-l">
-        <rect x="90" y="98" width="90" height="90" fill="#050400" clip-path="url(#eyeRingClipL)"/>
-        <g id="toad-eye-digits-l" clip-path="url(#eyeRingClipL)"></g>
-        <rect x="90" y="98" width="90" height="90" fill="#050400" clip-path="url(#eyePupilClipL)"/>
-        <g id="toad-pupil-digits-l" clip-path="url(#eyePupilClipL)"></g>
-        <ellipse id="toad-pupil-l" cx="126" cy="132" rx="4" ry="4" fill="#4a3800"/>
-      </g>
-      <g id="toad-eye-r">
-        <rect x="226" y="98" width="90" height="90" fill="#050400" clip-path="url(#eyeRingClipR)"/>
-        <g id="toad-eye-digits-r" clip-path="url(#eyeRingClipR)"></g>
-        <rect x="226" y="98" width="90" height="90" fill="#050400" clip-path="url(#eyePupilClipR)"/>
-        <g id="toad-pupil-digits-r" clip-path="url(#eyePupilClipR)"></g>
-        <ellipse id="toad-pupil-r" cx="262" cy="132" rx="4" ry="4" fill="#4a3800"/>
-      </g>
-
-      <!-- рот из цифр -->
-      <rect x="140" y="70" width="120" height="180" fill="#050400" clip-path="url(#mouthClip)"/>
-      <g id="toad-mouth-digits" clip-path="url(#mouthClip)"></g>
-    </svg>
-    <div id="toad-hex"></div>
-  </div>
   <div class="box" id="loginBox">
     <div class="title" id="authTitle">ДОСТУП // 04</div>
     <div class="sub" id="authSub">ВОССТАНОВЛЕННЫЙ ИНТЕРФЕЙС ХРАНИЛИЩА<br>БАЗА ДАННЫХ: SUPABASE<br>ВВЕДИТЕ ПАРОЛЬ ДЛЯ ПРОДОЛЖЕНИЯ</div>
@@ -790,6 +683,7 @@ button:hover{background:#3a0912;box-shadow:0 0 12px rgba(255,35,65,.5)}
   </div>
 </section>
 <div id="login-flash"></div>
+<div id="toad-tongue" class="hidden"></div>
 
 <section id="app" class="hidden">
   <div id="mini-toads-app" class="mini-toads-layer"></div>
@@ -862,56 +756,6 @@ function spawnNoise(){
   layer.appendChild(s);
  }
 }
-const glitchChars="_#%?";
-function randChar(){
- return Math.random()<0.06 ? glitchChars[Math.floor(Math.random()*glitchChars.length)] : String(Math.floor(Math.random()*10));
-}
-function fillDigits(groupId, xMin, xMax, yMin, yMax, colStep, rowH, pickColor, refreshCount){
- const g=document.getElementById(groupId); if(!g) return;
- const NS="http://www.w3.org/2000/svg";
- const height=yMax-yMin;
- const rowsOnce=Math.ceil(height/rowH), cycleH=rowH*rowsOnce;
- for(let x=xMin; x<=xMax; x+=colStep){
-  const col=document.createElementNS(NS,"g");
-  col.setAttribute("class","digit-col");
-  const dur=(9+Math.random()*8).toFixed(2);
-  col.style.animationDuration=dur+"s";
-  col.style.setProperty("--cycleH", cycleH+"px");
-  col.style.animationDelay=(-Math.random()*dur)+"s";
-  for(let i=0;i<rowsOnce*2;i++){
-   const t=document.createElementNS(NS,"text");
-   t.setAttribute("x",x); t.setAttribute("y", yMin+i*rowH);
-   t.setAttribute("font-size", Math.max(5, rowH*0.85));
-   t.setAttribute("fill", pickColor());
-   t.setAttribute("class","tdig");
-   t.style.animationDelay=(Math.random()*2.4)+"s";
-   t.textContent = randChar();
-   col.appendChild(t);
-  }
-  g.appendChild(col);
- }
- setInterval(()=>{
-  const all=g.querySelectorAll(".tdig");
-  for(let i=0;i<refreshCount;i++){
-   const t=all[Math.floor(Math.random()*all.length)];
-   if(!t) continue;
-   t.textContent = randChar();
-  }
- }, 500);
-}
-function buildToadDigits(){
- fillDigits("toad-digits", 6, 394, 8, 320, 8, 9, ()=>{
-  const roll=Math.random();
-  return roll<0.04 ? "#ffffff" : roll<0.1 ? "#ff2d55" : roll<0.32 ? "#7fdf6a" : roll<0.44 ? "#3fae4a" : roll<0.7 ? "#ffe23f" : "#caa000";
- }, 80);
- fillDigits("toad-eye-digits-l", 90, 180, 98, 188, 5, 6, ()=>Math.random()<0.7?"#fdf6d8":"#ffe23f", 10);
- fillDigits("toad-eye-digits-r", 226, 316, 98, 188, 5, 6, ()=>Math.random()<0.7?"#fdf6d8":"#ffe23f", 10);
- fillDigits("toad-pupil-digits-l", 100, 158, 108, 176, 5, 6, ()=>Math.random()<0.85?"#0c0900":"#4a3800", 6);
- fillDigits("toad-pupil-digits-r", 236, 294, 108, 176, 5, 6, ()=>Math.random()<0.85?"#0c0900":"#4a3800", 6);
- fillDigits("toad-mouth-digits", 145, 255, 75, 245, 6, 7, ()=>Math.random()<0.6?"#3a0810":"#1a0d05", 8);
-}
-buildToadDigits();
-
 function scatterMiniToads(containerId, count){
  const box=document.getElementById(containerId); if(!box) return;
  for(let i=0;i<count;i++){
@@ -983,29 +827,6 @@ $("musicToggle").onclick=()=>{
  updateMusicBtn();
 };
 
-function spawnHexLabels(){
- const box=$("toad-hex"); if(!box) return;
- const labels=["0xA3F9","SYS//BREACH","ERR_204","0xFF00","DECRYPT...","0x00E1","NODE_7A","CORRUPT","0x9B2C","LINK_LOST"];
- const positions=[
-  {left:"6%",top:"18%"},{left:"84%",top:"14%"},{left:"2%",top:"55%"},
-  {left:"90%",top:"52%"},{left:"14%",top:"78%"},{left:"78%",top:"80%"},
- ];
- positions.forEach((pos,i)=>{
-  const el=document.createElement("div");
-  el.className="hex-label";
-  el.textContent=labels[Math.floor(Math.random()*labels.length)];
-  el.style.left=pos.left; el.style.top=pos.top;
-  el.style.color = i%2 ? "#ff2de0" : "#00eaff";
-  el.style.animationDelay=(Math.random()*2)+"s, "+(Math.random()*2)+"s";
-  box.appendChild(el);
- });
- setInterval(()=>{
-  const els=box.querySelectorAll(".hex-label");
-  const el=els[Math.floor(Math.random()*els.length)];
-  if(el) el.textContent=labels[Math.floor(Math.random()*labels.length)];
- }, 900);
-}
-spawnHexLabels();
 function playBoot(){
  return new Promise(resolve=>{
   const boot=$("boot-screen"), textEl=$("boot-text"), cursor=$("boot-cursor");
@@ -1212,19 +1033,53 @@ async function enterApp(){
 
 function playToadEat(){
  return new Promise(resolve=>{
-  const wrap=$("toad-wrap"), box=$("loginBox"), flash=$("login-flash");
-  if(!wrap||!box){ resolve(); return; }
-  wrap.classList.add("chomp");
-  setTimeout(()=>{
-   box.classList.add("eaten");
+  const box=$("loginBox"), flash=$("login-flash"), tongue=$("toad-tongue");
+  if(!box){ resolve(); return; }
+  const toads=document.querySelectorAll("#mini-toads-login .mini-toad-inst");
+  if(toads.length && tongue){
+   const toad=toads[Math.floor(Math.random()*toads.length)];
+   const tRect=toad.getBoundingClientRect();
+   const bRect=box.getBoundingClientRect();
+   const x1=tRect.left+tRect.width*0.5, y1=tRect.top+tRect.height*0.6;
+   const x2=bRect.left+bRect.width*0.5, y2=bRect.top+bRect.height*0.5;
+   const dx=x2-x1, dy=y2-y1;
+   const dist=Math.sqrt(dx*dx+dy*dy);
+   const angle=Math.atan2(dy,dx)*180/Math.PI;
+   toad.style.animationPlayState="paused";
+   toad.style.opacity=".9";
+   tongue.style.left=x1+"px"; tongue.style.top=y1+"px";
+   tongue.style.transform="rotate("+angle+"deg)";
+   tongue.style.transition="none";
+   tongue.style.width="0px";
+   tongue.classList.remove("hidden");
+   requestAnimationFrame(()=>{
+    tongue.style.transition="width .18s ease-out";
+    tongue.style.width=dist+"px";
+   });
    setTimeout(()=>{
-    if(flash) flash.classList.add("go");
+    box.classList.add("eaten");
+    tongue.style.transition="width .5s ease-in";
+    tongue.style.width="0px";
     setTimeout(()=>{
-     $("login").classList.add("hidden");
-     resolve();
-    }, 260);
-   }, 480);
-  }, 200);
+     tongue.classList.add("hidden");
+     toad.style.animationPlayState="";
+     toad.style.opacity="";
+     if(flash) flash.classList.add("go");
+     setTimeout(()=>{ $("login").classList.add("hidden"); resolve(); }, 260);
+    }, 520);
+   }, 220);
+  }else{
+   setTimeout(()=>{
+    box.classList.add("eaten");
+    setTimeout(()=>{
+     if(flash) flash.classList.add("go");
+     setTimeout(()=>{
+      $("login").classList.add("hidden");
+      resolve();
+     }, 260);
+    }, 480);
+   }, 200);
+  }
  });
 }
 $("loginForm").onsubmit=async e=>{
@@ -1284,9 +1139,9 @@ $("lockBtn").onclick=()=>{
  file=null;
  $("app").classList.add("hidden"); $("login").classList.remove("hidden");
  $("pass").value=""; $("status").textContent="";
- $("toad-wrap").classList.remove("chomp");
  $("loginBox").classList.remove("eaten");
  $("submitBtn").disabled=false;
+ $("toad-tongue").classList.add("hidden");
 };
 
 // ===================== ЗАГРУЗКА КАРТИНОК =====================
