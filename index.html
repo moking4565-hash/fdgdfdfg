@@ -590,6 +590,12 @@ button:hover{background:#3a0912;box-shadow:0 0 12px rgba(255,35,65,.5)}
 .searchResult .p{color:#6b3b44;font-size:10px}
 .editor{padding:22px;min-width:0}.filebar{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:12px}.fname{color:#ff657b;font-size:18px}.meta,.hint{color:#75424d;font-size:11px}
 #text{width:100%;min-height:68vh;resize:vertical;background:#080207;color:#e8b6bf;border:1px solid #5f1826;outline:none;padding:20px;font:15px/1.7 var(--font)}
+#editorArea{position:relative}
+#embedsLayer{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.embed-img{position:absolute;pointer-events:auto;cursor:move;border:1px solid rgba(255,225,60,.55);box-shadow:0 0 10px rgba(0,0,0,.5);touch-action:none}
+.embed-img img{width:100%;height:100%;display:block;user-select:none;pointer-events:none;object-fit:contain;background:rgba(5,3,0,.6)}
+.embed-remove{position:absolute;top:-11px;right:-11px;width:20px;height:20px;line-height:18px;text-align:center;background:#2b0308;color:#ff8fa3;border:1px solid #ff2d55;border-radius:50%;cursor:pointer;font-size:13px;pointer-events:auto}
+.embed-resize{position:absolute;right:-6px;bottom:-6px;width:15px;height:15px;background:#ffe23f;border:1px solid #0a0700;cursor:nwse-resize;pointer-events:auto}
 #text:focus{border-color:#b72a43;box-shadow:0 0 18px rgba(190,20,45,.12)}
 .empty{padding:45px;border:1px dashed #4e1521;color:#784652;text-align:center}
 .modal{position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.78);display:flex;align-items:center;justify-content:center}.modalbox{width:min(430px,90vw);padding:22px;background:#0c0206;border:1px solid #9b2138}.modalbox h3{color:#ff657b;margin-top:0}.modalbox input{width:100%;padding:11px;background:#050103;color:#eee;border:1px solid #5f1826;margin:8px 0 14px}.actions{text-align:right}
@@ -693,11 +699,18 @@ button:hover{background:#3a0912;box-shadow:0 0 12px rgba(255,35,65,.5)}
     <section class="editor">
       <div id="empty" class="empty">ВЫБЕРИТЕ ФАЙЛ ИЗ КАТАЛОГА<br>ИЛИ СОЗДАЙТЕ НОВЫЙ ФАЙЛ.<div id="deleteFolderWrap" class="hidden" style="margin-top:18px"><button id="deleteFolderBtn">УДАЛИТЬ ЭТУ ПАПКУ</button></div></div>
       <div id="view" class="hidden">
-        <div class="filebar"><div><div id="fname" class="fname"></div><div id="meta" class="meta"></div></div><button id="deleteBtn">УДАЛИТЬ</button></div>
+        <div class="filebar"><div><div id="fname" class="fname"></div><div id="meta" class="meta"></div></div>
+          <button id="embedImgBtn">+ КАРТИНКА В ФАЙЛ</button>
+          <input id="embedImgInput" type="file" accept="image/*" class="hidden">
+          <button id="deleteBtn">УДАЛИТЬ</button>
+        </div>
         <div id="tags" class="tags"></div>
-        <textarea id="text" spellcheck="false"></textarea>
+        <div id="editorArea">
+          <textarea id="text" spellcheck="false"></textarea>
+          <div id="embedsLayer"></div>
+        </div>
         <img id="imgview" class="hidden">
-        <div class="hint">Файлы, папки и картинки хранятся в базе данных Supabase и видны всем посетителям сайта в реальном времени.</div>
+        <div class="hint">Файлы, папки и картинки хранятся в базе данных Supabase и видны всем посетителям сайта в реальном времени. Картинки внутри файла можно таскать мышью и менять размер за уголок.</div>
       </div>
     </section>
   </main>
@@ -967,7 +980,7 @@ function pathOf(target){
 }
 function buildTree(rows){
  const byId={};
- rows.forEach(r=>byId[r.id]={id:r.id,parent_id:r.parent_id,name:r.name,type:r.type,content:r.content||"",tags:r.tags||[],children:[]});
+ rows.forEach(r=>byId[r.id]={id:r.id,parent_id:r.parent_id,name:r.name,type:r.type,content:r.content||"",tags:r.tags||[],embeds:r.embeds||[],children:[]});
  const root=[];
  rows.forEach(r=>{
   const node=byId[r.id];
@@ -999,6 +1012,7 @@ function rebuildFromRows(rows){
    file=still;
    if(document.activeElement!==$("text")) $("text").value=file.content||"";
    renderTags();
+   if(!embedDragging) renderEmbeds();
   }
   else { file=null; }
  }
@@ -1035,14 +1049,109 @@ function open(x){
  $("fname").textContent=x.name;$("meta").textContent=pathOf(x)+" // БАЗА ДАННЫХ";$("path").textContent=pathOf(x);
  if(x.type==="image"){
   $("text").classList.add("hidden"); $("imgview").classList.remove("hidden"); $("imgview").src=x.content||"";
+  $("embedImgBtn").classList.add("hidden");
  }else{
   $("imgview").classList.add("hidden"); $("text").classList.remove("hidden"); $("text").value=x.content||"";
+  $("embedImgBtn").classList.remove("hidden");
  }
  renderTags();
+ renderEmbeds();
  render();
 }
 function modal(title,fn){action=fn;$("modalTitle").textContent=title;$("modalInput").value="";$("modal").classList.remove("hidden");$("modalInput").focus()}
 function close(){action=null;$("modal").classList.add("hidden")}
+
+// ===================== КАРТИНКИ ВНУТРИ ФАЙЛА =====================
+let embedDragging=false;
+function renderEmbeds(){
+ const layer=$("embedsLayer"); if(!layer) return;
+ layer.innerHTML="";
+ if(!file || file.type==="image") return;
+ (file.embeds||[]).forEach(em=>{
+  const box=document.createElement("div");
+  box.className="embed-img";
+  box.style.left=em.x+"px"; box.style.top=em.y+"px";
+  box.style.width=em.w+"px"; box.style.height=em.h+"px";
+  const img=document.createElement("img");
+  img.src=em.url; img.draggable=false;
+  box.appendChild(img);
+  const rm=document.createElement("div");
+  rm.className="embed-remove"; rm.textContent="×";
+  rm.onclick=(e)=>{ e.stopPropagation(); removeEmbed(em.id); };
+  box.appendChild(rm);
+  const rs=document.createElement("div");
+  rs.className="embed-resize";
+  box.appendChild(rs);
+
+  box.addEventListener("pointerdown",(e)=>{
+   if(e.target===rs || e.target===rm) return;
+   e.preventDefault();
+   embedDragging=true;
+   box.setPointerCapture(e.pointerId);
+   const startX=e.clientX, startY=e.clientY;
+   const origX=parseFloat(box.style.left), origY=parseFloat(box.style.top);
+   function onMove(ev){
+    box.style.left=(origX+(ev.clientX-startX))+"px";
+    box.style.top=(origY+(ev.clientY-startY))+"px";
+   }
+   function onUp(){
+    box.removeEventListener("pointermove",onMove);
+    box.removeEventListener("pointerup",onUp);
+    embedDragging=false;
+    em.x=parseFloat(box.style.left); em.y=parseFloat(box.style.top);
+    saveEmbeds();
+   }
+   box.addEventListener("pointermove",onMove);
+   box.addEventListener("pointerup",onUp);
+  });
+  rs.addEventListener("pointerdown",(e)=>{
+   e.preventDefault(); e.stopPropagation();
+   embedDragging=true;
+   rs.setPointerCapture(e.pointerId);
+   const startX=e.clientX, startY=e.clientY;
+   const origW=parseFloat(box.style.width), origH=parseFloat(box.style.height);
+   function onMove(ev){
+    box.style.width=Math.max(30, origW+(ev.clientX-startX))+"px";
+    box.style.height=Math.max(30, origH+(ev.clientY-startY))+"px";
+   }
+   function onUp(){
+    rs.removeEventListener("pointermove",onMove);
+    rs.removeEventListener("pointerup",onUp);
+    embedDragging=false;
+    em.w=parseFloat(box.style.width); em.h=parseFloat(box.style.height);
+    saveEmbeds();
+   }
+   rs.addEventListener("pointermove",onMove);
+   rs.addEventListener("pointerup",onUp);
+  });
+
+  layer.appendChild(box);
+ });
+}
+async function saveEmbeds(){
+ if(!file) return;
+ const {error}=await sb.from("files").update({embeds:file.embeds||[]}).eq("id",file.id);
+ if(error){ $("meta").textContent=pathOf(file)+" // ОШИБКА СОХРАНЕНИЯ КАРТИНКИ"; }
+}
+function removeEmbed(id){
+ if(!file) return;
+ file.embeds=(file.embeds||[]).filter(e=>e.id!==id);
+ renderEmbeds();
+ saveEmbeds();
+}
+$("embedImgBtn").onclick=()=>$("embedImgInput").click();
+$("embedImgInput").onchange=async()=>{
+ const f=$("embedImgInput").files[0]; if(!f || !file) return;
+ const path=(crypto.randomUUID?crypto.randomUUID():String(Date.now()))+"-"+f.name.replace(/[^a-zA-Z0-9.\-_]/g,"_");
+ const {error:upErr}=await sb.storage.from(IMAGE_BUCKET).upload(path,f,{cacheControl:"3600",upsert:false});
+ $("embedImgInput").value="";
+ if(upErr){ alert("ОШИБКА ЗАГРУЗКИ КАРТИНКИ: "+upErr.message); return; }
+ const {data:{publicUrl}}=sb.storage.from(IMAGE_BUCKET).getPublicUrl(path);
+ file.embeds=file.embeds||[];
+ file.embeds.push({id:(crypto.randomUUID?crypto.randomUUID():String(Date.now())), url:publicUrl, x:20, y:20, w:180, h:180});
+ renderEmbeds();
+ await saveEmbeds();
+};
 
 // ===================== ТЕГИ =====================
 function renderTags(){
