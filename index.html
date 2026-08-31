@@ -595,9 +595,9 @@ button:hover{background:#3a0912;box-shadow:0 0 12px rgba(255,35,65,.5)}
 .modal{position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.78);display:flex;align-items:center;justify-content:center}.modalbox{width:min(430px,90vw);padding:22px;background:#0c0206;border:1px solid #9b2138}.modalbox h3{color:#ff657b;margin-top:0}.modalbox input{width:100%;padding:11px;background:#050103;color:#eee;border:1px solid #5f1826;margin:8px 0 14px}.actions{text-align:right}
 @keyframes g{50%{transform:translate(2px,-1px)}100%{transform:translate(-1px,1px)}}@media(max-width:760px){.workspace{grid-template-columns:1fr}.sidebar{border-right:0;border-bottom:1px solid #4e1521}}
 .mini-toads-layer{position:absolute;inset:0;z-index:-1;pointer-events:none;overflow:hidden}
-.mini-toad-inst{position:absolute;opacity:.22;animation:miniToadPulse 6s ease-in-out infinite}
+.mini-toad-inst{position:absolute;opacity:.85;animation:miniToadPulse 6s ease-in-out infinite;filter:drop-shadow(0 0 6px rgba(255,225,60,.35))}
 .mini-toad-inst text{font-family:var(--font-mono);font-size:13px;dominant-baseline:middle;text-anchor:middle}
-@keyframes miniToadPulse{0%,100%{opacity:.14}50%{opacity:.3}}
+@keyframes miniToadPulse{0%,100%{opacity:.7}50%{opacity:1}}
 #musicToggle{
   position:fixed;top:14px;right:14px;z-index:10001;
   font:12px var(--font-mono);letter-spacing:1px;
@@ -644,21 +644,9 @@ button:hover{background:#3a0912;box-shadow:0 0 12px rgba(255,35,65,.5)}
       </clipPath>
     </defs>
     <rect x="0" y="0" width="200" height="170" fill="#050400" clip-path="url(#miniToadClip)"/>
-    <g class="mini-tdig" clip-path="url(#miniToadClip)">
-      <text x="45" y="45" fill="#ffe23f">4</text><text x="60" y="45" fill="#7fdf6a">1</text><text x="75" y="45" fill="#ffe23f">0</text>
-      <text x="120" y="45" fill="#caa000">7</text><text x="135" y="45" fill="#ffe23f">2</text><text x="150" y="45" fill="#7fdf6a">9</text>
-      <text x="35" y="62" fill="#7fdf6a">3</text><text x="50" y="62" fill="#ffe23f">8</text><text x="65" y="62" fill="#3fae4a">0</text><text x="80" y="62" fill="#ffe23f">1</text>
-      <text x="115" y="62" fill="#caa000">6</text><text x="130" y="62" fill="#7fdf6a">5</text><text x="145" y="62" fill="#ffe23f">4</text><text x="160" y="62" fill="#3fae4a">2</text>
-      <text x="30" y="79" fill="#ffe23f">9</text><text x="45" y="79" fill="#7fdf6a">7</text><text x="60" y="79" fill="#ffe23f">1</text><text x="75" y="79" fill="#caa000">3</text><text x="90" y="79" fill="#7fdf6a">0</text>
-      <text x="105" y="79" fill="#ffe23f">8</text><text x="120" y="79" fill="#3fae4a">2</text><text x="135" y="79" fill="#ffe23f">6</text><text x="150" y="79" fill="#caa000">4</text><text x="165" y="79" fill="#7fdf6a">1</text>
-      <text x="30" y="96" fill="#7fdf6a">0</text><text x="45" y="96" fill="#ffe23f">5</text><text x="60" y="96" fill="#3fae4a">3</text><text x="75" y="96" fill="#ffe23f">9</text><text x="90" y="96" fill="#caa000">1</text>
-      <text x="105" y="96" fill="#7fdf6a">4</text><text x="120" y="96" fill="#ffe23f">0</text><text x="135" y="96" fill="#3fae4a">7</text><text x="150" y="96" fill="#ffe23f">2</text><text x="165" y="96" fill="#caa000">8</text>
-      <text x="40" y="113" fill="#ffe23f">6</text><text x="55" y="113" fill="#7fdf6a">2</text><text x="70" y="113" fill="#ffe23f">9</text><text x="85" y="113" fill="#3fae4a">0</text>
-      <text x="115" y="113" fill="#7fdf6a">5</text><text x="130" y="113" fill="#ffe23f">1</text><text x="145" y="113" fill="#caa000">3</text><text x="160" y="113" fill="#ffe23f">7</text>
-      <text x="60" y="128" fill="#7fdf6a">8</text><text x="80" y="128" fill="#ffe23f">4</text><text x="120" y="128" fill="#3fae4a">6</text><text x="140" y="128" fill="#ffe23f">0</text>
-    </g>
-    <circle cx="65" cy="70" r="16" fill="#fdf6d8"/><ellipse cx="65" cy="71" rx="11" ry="13" fill="#0c0900"/>
-    <circle cx="135" cy="70" r="16" fill="#fdf6d8"/><ellipse cx="135" cy="71" rx="11" ry="13" fill="#0c0900"/>
+    <g id="miniToadDots" clip-path="url(#miniToadClip)"></g>
+    <circle cx="65" cy="70" r="17" fill="#ffe23f"/><ellipse cx="65" cy="71" rx="10" ry="12" fill="#050400"/>
+    <circle cx="135" cy="70" r="17" fill="#ffe23f"/><ellipse cx="135" cy="71" rx="10" ry="12" fill="#050400"/>
   </symbol>
 </svg>
 
@@ -756,115 +744,158 @@ function spawnNoise(){
   layer.appendChild(s);
  }
 }
-function scatterMiniToads(containerId, count){
- const box=document.getElementById(containerId); if(!box) return;
- for(let i=0;i<count;i++){
-  const wrap=document.createElementNS("http://www.w3.org/2000/svg","svg");
-  wrap.setAttribute("viewBox","0 0 200 170");
-  const size=40+Math.random()*50;
-  wrap.setAttribute("width",size); wrap.setAttribute("height",size*170/200);
-  wrap.classList.add("mini-toad-inst");
-  wrap.style.left=(Math.random()*92)+"%";
-  wrap.style.top=(Math.random()*88)+"%";
-  wrap.style.animationDelay=(-Math.random()*6)+"s";
-  wrap.style.transform="rotate("+(Math.random()*16-8)+"deg)";
-  const use=document.createElementNS("http://www.w3.org/2000/svg","use");
-  use.setAttribute("href","#miniToad");
-  wrap.appendChild(use);
-  box.appendChild(wrap);
+function buildMiniToadDots(){
+ const g=document.getElementById("miniToadDots"); if(!g) return;
+ const NS="http://www.w3.org/2000/svg";
+ for(let y=28; y<=132; y+=7){
+  for(let x=24; x<=176; x+=7){
+   const jitterX=(Math.random()-0.5)*3, jitterY=(Math.random()-0.5)*3;
+   const c=document.createElementNS(NS,"circle");
+   c.setAttribute("cx", x+jitterX); c.setAttribute("cy", y+jitterY);
+   c.setAttribute("r", (1.4+Math.random()*1.6).toFixed(2));
+   const roll=Math.random();
+   c.setAttribute("fill", roll<0.75 ? "#ffe23f" : roll<0.92 ? "#caa000" : "#fff6c9");
+   c.setAttribute("opacity", (0.6+Math.random()*0.4).toFixed(2));
+   g.appendChild(c);
+  }
  }
 }
-scatterMiniToads("mini-toads-login", 7);
-scatterMiniToads("mini-toads-app", 7);
+buildMiniToadDots();
+function scatterMiniToads(containerId, count){
+ const box=document.getElementById(containerId); if(!box) return;
+ const cols=Math.ceil(Math.sqrt(count*1.7));
+ const rows=Math.ceil(count/cols);
+ const cellW=100/cols, cellH=100/rows;
+ let placed=0;
+ for(let r=0;r<rows && placed<count;r++){
+  for(let c=0;c<cols && placed<count;c++){
+   const jitterX=(Math.random()-0.5)*cellW*0.5;
+   const jitterY=(Math.random()-0.5)*cellH*0.5;
+   const left=Math.min(90, Math.max(1, c*cellW+cellW*0.5+jitterX-7));
+   const top=Math.min(86, Math.max(1, r*cellH+cellH*0.5+jitterY-7));
+   const wrap=document.createElementNS("http://www.w3.org/2000/svg","svg");
+   wrap.setAttribute("viewBox","0 0 200 170");
+   const size=70+Math.random()*80;
+   wrap.setAttribute("width",size); wrap.setAttribute("height",size*170/200);
+   wrap.classList.add("mini-toad-inst");
+   wrap.style.left=left+"%";
+   wrap.style.top=top+"%";
+   wrap.style.animationDelay=(-Math.random()*6)+"s";
+   wrap.style.transform="rotate("+(Math.random()*16-8)+"deg)";
+   const use=document.createElementNS("http://www.w3.org/2000/svg","use");
+   use.setAttribute("href","#miniToad");
+   wrap.appendChild(use);
+   box.appendChild(wrap);
+   placed++;
+  }
+ }
+}
+scatterMiniToads("mini-toads-login", 11);
+scatterMiniToads("mini-toads-app", 11);
 
 
 // ===================== МУЗЫКА (генерируется в браузере, без файлов) =====================
-let audioCtx=null, masterGain=null, musicOn=false, stepTimer=null, stepIndex=0, noiseBuffer=null, padOsc1=null, padOsc2=null, padGain=null, padFilter=null, padLfo=null;
+// Оригинальный трек в тяжёлом рок-звучании (перегруженные power-аккорды + бит).
+// Это не воспроизведение чьих-либо реальных песен — только собственный,
+// сгенерированный на лету материал в похожей стилистике.
+let audioCtx=null, masterGain=null, musicOn=false, stepTimer=null, stepIndex=0, noiseBuffer=null, distCurve=null;
 
-// 16-шаговый арпеджио-риф (ля-фригийский лад — типичное киберпанк-звучание)
-const arpNotes=[220.00,261.63,246.94,293.66,220.00,196.00,220.00,261.63,
-                246.94,293.66,329.63,293.66,246.94,220.00,196.00,220.00];
-// басовая линия, меняется каждые 2 шага (8 нот на цикл)
-const bassNotes=[55.00,55.00,82.41,55.00,55.00,61.74,73.42,55.00];
+// риф: 0 = пауза, иначе — частота корня power-аккорда (E5-G5-A5-подобная прогрессия)
+const riffRoots=[82.41,0,82.41,82.41, 0,98.00,0,110.00,
+                 82.41,0,82.41,82.41, 0,98.00,110.00,0];
 
+function makeDistortionCurve(amount){
+ const n=44100, curve=new Float32Array(n), deg=Math.PI/180;
+ for(let i=0;i<n;i++){
+  const x=i*2/n-1;
+  curve[i]=(3+amount)*x*20*deg/(Math.PI+amount*Math.abs(x));
+ }
+ return curve;
+}
 function ensureAudio(){
  if(audioCtx) return;
  audioCtx=new (window.AudioContext||window.webkitAudioContext)();
  masterGain=audioCtx.createGain();
- masterGain.gain.value=0.17;
+ masterGain.gain.value=0.16;
  masterGain.connect(audioCtx.destination);
- const bufSize=audioCtx.sampleRate*0.05;
+ const bufSize=audioCtx.sampleRate*0.18;
  noiseBuffer=audioCtx.createBuffer(1,bufSize,audioCtx.sampleRate);
  const data=noiseBuffer.getChannelData(0);
  for(let i=0;i<bufSize;i++) data[i]=Math.random()*2-1;
+ distCurve=makeDistortionCurve(60);
 }
-function playNote(freq, time, dur, type, gainPeak, filterFreq){
- const osc=audioCtx.createOscillator();
- osc.type=type;
- osc.frequency.value=freq;
- const g=audioCtx.createGain();
- g.gain.setValueAtTime(0,time);
- g.gain.linearRampToValueAtTime(gainPeak,time+0.012);
- g.gain.exponentialRampToValueAtTime(0.001,time+dur);
- const filt=audioCtx.createBiquadFilter();
- filt.type="lowpass";
- filt.frequency.value=filterFreq;
- osc.connect(filt); filt.connect(g); g.connect(masterGain);
- osc.start(time); osc.stop(time+dur+0.03);
+function playPowerChord(root, time, dur, gainPeak){
+ [root, root*1.5, root*2].forEach((f,i)=>{
+  const osc=audioCtx.createOscillator();
+  osc.type="sawtooth";
+  osc.frequency.value=f;
+  osc.detune.value=(i-1)*6;
+  const dist=audioCtx.createWaveShaper();
+  dist.curve=distCurve; dist.oversample="4x";
+  const filt=audioCtx.createBiquadFilter();
+  filt.type="lowpass"; filt.frequency.value=2600;
+  const g=audioCtx.createGain();
+  g.gain.setValueAtTime(0,time);
+  g.gain.linearRampToValueAtTime(gainPeak,time+0.004);
+  g.gain.exponentialRampToValueAtTime(0.001,time+dur);
+  osc.connect(dist); dist.connect(filt); filt.connect(g); g.connect(masterGain);
+  osc.start(time); osc.stop(time+dur+0.02);
+ });
 }
 function playKick(time){
  const osc=audioCtx.createOscillator();
  osc.type="sine";
- osc.frequency.setValueAtTime(150,time);
- osc.frequency.exponentialRampToValueAtTime(42,time+0.09);
+ osc.frequency.setValueAtTime(160,time);
+ osc.frequency.exponentialRampToValueAtTime(45,time+0.09);
  const g=audioCtx.createGain();
- g.gain.setValueAtTime(0.55,time);
+ g.gain.setValueAtTime(0.6,time);
  g.gain.exponentialRampToValueAtTime(0.001,time+0.17);
  osc.connect(g); g.connect(masterGain);
  osc.start(time); osc.stop(time+0.19);
+}
+function playSnare(time){
+ const src=audioCtx.createBufferSource();
+ src.buffer=noiseBuffer;
+ const g=audioCtx.createGain();
+ g.gain.setValueAtTime(0.32,time);
+ g.gain.exponentialRampToValueAtTime(0.001,time+0.13);
+ const bp=audioCtx.createBiquadFilter();
+ bp.type="bandpass"; bp.frequency.value=1800; bp.Q.value=0.7;
+ src.connect(bp); bp.connect(g); g.connect(masterGain);
+ src.start(time); src.stop(time+0.14);
+ const osc=audioCtx.createOscillator();
+ osc.type="triangle"; osc.frequency.value=190;
+ const g2=audioCtx.createGain();
+ g2.gain.setValueAtTime(0.18,time);
+ g2.gain.exponentialRampToValueAtTime(0.001,time+0.09);
+ osc.connect(g2); g2.connect(masterGain);
+ osc.start(time); osc.stop(time+0.1);
 }
 function playHat(time, peak){
  const src=audioCtx.createBufferSource();
  src.buffer=noiseBuffer;
  const g=audioCtx.createGain();
  g.gain.setValueAtTime(peak,time);
- g.gain.exponentialRampToValueAtTime(0.001,time+0.045);
+ g.gain.exponentialRampToValueAtTime(0.001,time+0.04);
  const hp=audioCtx.createBiquadFilter();
- hp.type="highpass"; hp.frequency.value=6500;
+ hp.type="highpass"; hp.frequency.value=7000;
  src.connect(hp); hp.connect(g); g.connect(masterGain);
- src.start(time); src.stop(time+0.05);
-}
-function startPad(){
- padGain=audioCtx.createGain();
- padGain.gain.value=0.05;
- padFilter=audioCtx.createBiquadFilter();
- padFilter.type="lowpass";
- padFilter.frequency.value=700;
- padOsc1=audioCtx.createOscillator(); padOsc1.type="sawtooth"; padOsc1.frequency.value=110;
- padOsc2=audioCtx.createOscillator(); padOsc2.type="sawtooth"; padOsc2.frequency.value=110*1.5; // квинта
- padOsc1.connect(padFilter); padOsc2.connect(padFilter); padFilter.connect(padGain); padGain.connect(masterGain);
- padLfo=audioCtx.createOscillator(); padLfo.type="sine"; padLfo.frequency.value=0.08;
- const lfoGain=audioCtx.createGain(); lfoGain.gain.value=380;
- padLfo.connect(lfoGain); lfoGain.connect(padFilter.frequency);
- padOsc1.start(); padOsc2.start(); padLfo.start();
-}
-function stopPad(){
- [padOsc1,padOsc2,padLfo].forEach(o=>{ if(o){ try{o.stop();}catch(e){} } });
- padOsc1=padOsc2=padLfo=padGain=padFilter=null;
+ src.start(time); src.stop(time+0.045);
 }
 function startMusic(){
  ensureAudio();
  if(audioCtx.state==="suspended") audioCtx.resume();
- startPad();
  stepIndex=0;
- const stepDur=0.22;
+ const stepDur=0.185;
  function scheduleStep(){
   const t=audioCtx.currentTime+0.02;
   const bar=stepIndex%16;
-  if(bar%2===0){ playNote(bassNotes[(bar/2)%bassNotes.length], t, stepDur*1.8, "sawtooth", 0.32, 420); }
-  if(bar%4===0){ playKick(t); }
-  if(bar%2===1){ playHat(t, bar%4===3?0.09:0.045); }
-  playNote(arpNotes[bar], t, stepDur*0.85, "square", 0.095, 1700);
+  const root=riffRoots[bar];
+  if(root){ playPowerChord(root, t, stepDur*1.4, 0.11); }
+  if(bar===0||bar===8){ playKick(t); }
+  if(bar===4||bar===12){ playSnare(t); }
+  if(bar===6||bar===14){ playKick(t); }
+  playHat(t, bar%2===0?0.05:0.03);
   stepIndex++;
  }
  scheduleStep();
@@ -872,7 +903,6 @@ function startMusic(){
 }
 function stopMusic(){
  if(stepTimer){ clearInterval(stepTimer); stepTimer=null; }
- stopPad();
 }
 function updateMusicBtn(){ $("musicToggle").textContent = musicOn ? "🔊 МУЗЫКА" : "🔇 МУЗЫКА"; }
 $("musicToggle").onclick=()=>{
