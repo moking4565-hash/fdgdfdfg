@@ -602,6 +602,7 @@ button:hover{background:#3a0912;box-shadow:0 0 12px rgba(255,35,65,.5)}
 @keyframes g{50%{transform:translate(2px,-1px)}100%{transform:translate(-1px,1px)}}@media(max-width:760px){.workspace{grid-template-columns:1fr}.sidebar{border-right:0;border-bottom:1px solid #4e1521}}
 .mini-toads-layer{position:absolute;inset:0;z-index:-1;pointer-events:none;overflow:hidden}
 .mini-toad-inst{position:absolute;opacity:.85;animation:miniToadPulse 6s ease-in-out infinite;filter:drop-shadow(0 0 6px rgba(255,225,60,.35))}
+.mini-toad-inst.big-faint{opacity:.07;animation:none;filter:none}
 .mini-toad-inst text{font-family:var(--font-mono);font-size:13px;dominant-baseline:middle;text-anchor:middle}
 @keyframes miniToadPulse{0%,100%{opacity:.7}50%{opacity:1}}
 #musicToggle{
@@ -803,8 +804,21 @@ function scatterMiniToads(containerId, count){
   }
  }
 }
+function placeBigFaintToad(containerId){
+ const box=document.getElementById(containerId); if(!box) return;
+ const wrap=document.createElementNS("http://www.w3.org/2000/svg","svg");
+ wrap.setAttribute("viewBox","0 0 200 170");
+ wrap.classList.add("mini-toad-inst","big-faint");
+ wrap.style.left="50%"; wrap.style.top="50%";
+ wrap.style.width="72vmin"; wrap.style.height="calc(72vmin * 0.85)";
+ wrap.style.transform="translate(-50%,-50%)";
+ const use=document.createElementNS("http://www.w3.org/2000/svg","use");
+ use.setAttribute("href","#miniToad");
+ wrap.appendChild(use);
+ box.appendChild(wrap);
+}
 scatterMiniToads("mini-toads-login", 11);
-scatterMiniToads("mini-toads-app", 11);
+placeBigFaintToad("mini-toads-app");
 
 
 // ===================== МУЗЫКА (генерируется в браузере, без файлов) =====================
