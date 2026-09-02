@@ -602,11 +602,11 @@ button:hover{background:#3a0912;box-shadow:0 0 12px rgba(255,35,65,.5)}
 @keyframes g{50%{transform:translate(2px,-1px)}100%{transform:translate(-1px,1px)}}@media(max-width:760px){.workspace{grid-template-columns:1fr}.sidebar{border-right:0;border-bottom:1px solid #4e1521}}
 .mini-toads-layer{position:absolute;inset:0;z-index:-1;pointer-events:none;overflow:hidden}
 .mini-toad-inst{position:absolute;opacity:.85;animation:miniToadPulse 6s ease-in-out infinite;filter:drop-shadow(0 0 6px rgba(255,225,60,.35))}
-.mini-toad-inst.big-faint{opacity:.07;animation:none;filter:none}
+.mini-toad-inst.big-faint{opacity:.1;animation:none;filter:hue-rotate(305deg) saturate(1.4) brightness(.85)}
 .mini-toad-inst text{font-family:var(--font-mono);font-size:13px;dominant-baseline:middle;text-anchor:middle}
 @keyframes miniToadPulse{0%,100%{opacity:.7}50%{opacity:1}}
 #musicToggle{
-  position:fixed;top:14px;right:14px;z-index:10001;
+  position:fixed;bottom:16px;right:16px;z-index:10001;
   font:12px var(--font-mono);letter-spacing:1px;
   background:#0a0700;color:#ffe23f;border:1px solid #8a7212;
   padding:8px 12px;cursor:pointer;
@@ -1233,6 +1233,7 @@ function subscribeRealtime(){
 async function enterApp(){
  $("login").classList.add("hidden");
  $("app").classList.remove("hidden");
+ $("page-glitch").classList.add("hidden");
  await loadFiles();
  empty();
  subscribeRealtime();
@@ -1349,6 +1350,7 @@ $("lockBtn").onclick=()=>{
  $("loginBox").classList.remove("eaten");
  $("submitBtn").disabled=false;
  $("toad-tongue").classList.add("hidden");
+ $("page-glitch").classList.remove("hidden");
 };
 
 // ===================== ЗАГРУЗКА КАРТИНОК =====================
