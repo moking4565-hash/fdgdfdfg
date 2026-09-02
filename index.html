@@ -602,7 +602,7 @@ button:hover{background:#3a0912;box-shadow:0 0 12px rgba(255,35,65,.5)}
 @keyframes g{50%{transform:translate(2px,-1px)}100%{transform:translate(-1px,1px)}}@media(max-width:760px){.workspace{grid-template-columns:1fr}.sidebar{border-right:0;border-bottom:1px solid #4e1521}}
 .mini-toads-layer{position:absolute;inset:0;z-index:-1;pointer-events:none;overflow:hidden}
 .mini-toad-inst{position:absolute;opacity:.85;animation:miniToadPulse 6s ease-in-out infinite;filter:drop-shadow(0 0 6px rgba(255,225,60,.35))}
-.mini-toad-inst.big-faint{opacity:.14;animation:none;filter:none}
+.mini-toad-inst.big-faint{opacity:.28;animation:none;filter:none}
 .mini-toad-inst text{font-family:var(--font-mono);font-size:13px;dominant-baseline:middle;text-anchor:middle}
 @keyframes miniToadPulse{0%,100%{opacity:.7}50%{opacity:1}}
 #musicToggle{
@@ -663,22 +663,22 @@ button:hover{background:#3a0912;box-shadow:0 0 12px rgba(255,35,65,.5)}
         <feDisplacementMap in="SourceGraphic" in2="n" scale="5"/>
       </filter>
     </defs>
-    <g filter="url(#toadWobble)">
-      <path d="M35 140 C 15 148,4 165,8 178 C 25 180,42 172,52 158 Z" fill="#8a9a5b" stroke="#1a1a12" stroke-width="5" stroke-linejoin="round"/>
-      <path d="M165 140 C 185 148,196 165,192 178 C 175 180,158 172,148 158 Z" fill="#8a9a5b" stroke="#1a1a12" stroke-width="5" stroke-linejoin="round"/>
+    <g filter="url(#toadWobble)" fill="none" stroke="#6b5a45" stroke-linejoin="round">
+      <path d="M35 140 C 15 148,4 165,8 178 C 25 180,42 172,52 158 Z" stroke-width="5"/>
+      <path d="M165 140 C 185 148,196 165,192 178 C 175 180,158 172,148 158 Z" stroke-width="5"/>
       <path d="M100 15 C 68 15,52 38,48 60 C 26 66,12 92,15 118 C 18 148,45 168,82 170 C 95 173,105 173,118 170 C 155 168,182 148,185 118 C 188 92,174 66,152 60 C 148 38,132 15,100 15 Z"
-            fill="#8fa25f" stroke="#1a1a12" stroke-width="6" stroke-linejoin="round"/>
-      <circle cx="72" cy="30" r="5" fill="#8fa25f" stroke="#1a1a12" stroke-width="3"/>
-      <circle cx="128" cy="30" r="5" fill="#8fa25f" stroke="#1a1a12" stroke-width="3"/>
-      <circle cx="45" cy="95" r="4" fill="#8fa25f" stroke="#1a1a12" stroke-width="3"/>
-      <circle cx="155" cy="95" r="4" fill="#8fa25f" stroke="#1a1a12" stroke-width="3"/>
-      <ellipse cx="100" cy="120" rx="52" ry="42" fill="#f2e6c8" stroke="#1a1a12" stroke-width="5"/>
-      <path d="M62 145 C 55 158,58 168,70 170 C 80 168,82 158,78 148 Z" fill="#8fa25f" stroke="#1a1a12" stroke-width="4" stroke-linejoin="round"/>
-      <path d="M138 145 C 145 158,142 168,130 170 C 120 168,118 158,122 148 Z" fill="#8fa25f" stroke="#1a1a12" stroke-width="4" stroke-linejoin="round"/>
-      <ellipse cx="63" cy="57" rx="17" ry="11" fill="#2a2410" stroke="#1a1a12" stroke-width="4"/>
-      <path d="M48 60 Q63 68 78 60 Q63 63 48 60 Z" fill="#e8d888"/>
-      <ellipse cx="137" cy="57" rx="17" ry="11" fill="#2a2410" stroke="#1a1a12" stroke-width="4"/>
-      <path d="M122 60 Q137 68 152 60 Q137 63 122 60 Z" fill="#e8d888"/>
+            stroke-width="6"/>
+      <circle cx="72" cy="30" r="5" stroke-width="3"/>
+      <circle cx="128" cy="30" r="5" stroke-width="3"/>
+      <circle cx="45" cy="95" r="4" stroke-width="3"/>
+      <circle cx="155" cy="95" r="4" stroke-width="3"/>
+      <ellipse cx="100" cy="120" rx="52" ry="42" stroke-width="5"/>
+      <path d="M62 145 C 55 158,58 168,70 170 C 80 168,82 158,78 148 Z" stroke-width="4"/>
+      <path d="M138 145 C 145 158,142 168,130 170 C 120 168,118 158,122 148 Z" stroke-width="4"/>
+      <ellipse cx="63" cy="57" rx="17" ry="11" stroke-width="4"/>
+      <path d="M48 60 Q63 68 78 60 Q63 63 48 60 Z" stroke-width="2"/>
+      <ellipse cx="137" cy="57" rx="17" ry="11" stroke-width="4"/>
+      <path d="M122 60 Q137 68 152 60 Q137 63 122 60 Z" stroke-width="2"/>
     </g>
   </symbol>
 </svg>
