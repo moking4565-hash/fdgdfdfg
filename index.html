@@ -655,6 +655,23 @@ button:hover{background:#3a0912;box-shadow:0 0 12px rgba(255,35,65,.5)}
     <circle cx="65" cy="70" r="17" fill="#ffe23f"/><ellipse cx="65" cy="71" rx="10" ry="12" fill="#050400"/>
     <circle cx="135" cy="70" r="17" fill="#ffe23f"/><ellipse cx="135" cy="71" rx="10" ry="12" fill="#050400"/>
   </symbol>
+
+  <symbol id="bigToad" viewBox="0 0 200 170">
+    <defs>
+      <clipPath id="bigToadClip">
+        <path d="M100 22 C 89 22,85 32,77 39 C 54 39,30 58,27 87 C 25 111,36 128,62 134 C 74 136,86 124,100 124 C 114 124,126 136,138 134 C 164 128,175 111,173 87 C 170 58,146 39,123 39 C 115 32,111 22,100 22 Z"/>
+      </clipPath>
+      <pattern id="toadStripes" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+        <rect width="9" height="9" fill="#050400"/>
+        <rect width="4.5" height="9" fill="#ffe23f"/>
+      </pattern>
+    </defs>
+    <rect x="0" y="0" width="200" height="170" fill="url(#toadStripes)" clip-path="url(#bigToadClip)"/>
+    <circle cx="65" cy="70" r="17" fill="none" stroke="#ffe23f" stroke-width="2.5"/>
+    <circle cx="65" cy="71" r="5" fill="none" stroke="#ffe23f" stroke-width="2"/>
+    <circle cx="135" cy="70" r="17" fill="none" stroke="#ffe23f" stroke-width="2.5"/>
+    <circle cx="135" cy="71" r="5" fill="none" stroke="#ffe23f" stroke-width="2"/>
+  </symbol>
 </svg>
 
 <section id="boot-screen">
@@ -813,7 +830,7 @@ function placeBigFaintToad(containerId){
  wrap.style.width="72vmin"; wrap.style.height="calc(72vmin * 0.85)";
  wrap.style.transform="translate(-50%,-50%)";
  const use=document.createElementNS("http://www.w3.org/2000/svg","use");
- use.setAttribute("href","#miniToad");
+ use.setAttribute("href","#bigToad");
  wrap.appendChild(use);
  box.appendChild(wrap);
 }
