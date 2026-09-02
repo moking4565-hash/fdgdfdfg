@@ -602,7 +602,7 @@ button:hover{background:#3a0912;box-shadow:0 0 12px rgba(255,35,65,.5)}
 @keyframes g{50%{transform:translate(2px,-1px)}100%{transform:translate(-1px,1px)}}@media(max-width:760px){.workspace{grid-template-columns:1fr}.sidebar{border-right:0;border-bottom:1px solid #4e1521}}
 .mini-toads-layer{position:absolute;inset:0;z-index:-1;pointer-events:none;overflow:hidden}
 .mini-toad-inst{position:absolute;opacity:.85;animation:miniToadPulse 6s ease-in-out infinite;filter:drop-shadow(0 0 6px rgba(255,225,60,.35))}
-.mini-toad-inst.big-faint{opacity:.28;animation:none;filter:none}
+.mini-toad-inst.big-faint{opacity:.4;animation:none;filter:none}
 .mini-toad-inst text{font-family:var(--font-mono);font-size:13px;dominant-baseline:middle;text-anchor:middle}
 @keyframes miniToadPulse{0%,100%{opacity:.7}50%{opacity:1}}
 #musicToggle{
@@ -662,23 +662,31 @@ button:hover{background:#3a0912;box-shadow:0 0 12px rgba(255,35,65,.5)}
         <feTurbulence type="fractalNoise" baseFrequency="0.025 0.05" numOctaves="2" seed="7" result="n"/>
         <feDisplacementMap in="SourceGraphic" in2="n" scale="5"/>
       </filter>
+      <clipPath id="bigToadClip">
+        <path d="M35 140 C 15 148,4 165,8 178 C 25 180,42 172,52 158 Z"/>
+        <path d="M165 140 C 185 148,196 165,192 178 C 175 180,158 172,148 158 Z"/>
+        <path d="M100 15 C 68 15,52 38,48 60 C 26 66,12 92,15 118 C 18 148,45 168,82 170 C 95 173,105 173,118 170 C 155 168,182 148,185 118 C 188 92,174 66,152 60 C 148 38,132 15,100 15 Z"/>
+        <path d="M62 145 C 55 158,58 168,70 170 C 80 168,82 158,78 148 Z"/>
+        <path d="M138 145 C 145 158,142 168,130 170 C 120 168,118 158,122 148 Z"/>
+      </clipPath>
     </defs>
-    <g filter="url(#toadWobble)" fill="none" stroke="#6b5a45" stroke-linejoin="round">
-      <path d="M35 140 C 15 148,4 165,8 178 C 25 180,42 172,52 158 Z" stroke-width="5"/>
-      <path d="M165 140 C 185 148,196 165,192 178 C 175 180,158 172,148 158 Z" stroke-width="5"/>
-      <path d="M100 15 C 68 15,52 38,48 60 C 26 66,12 92,15 118 C 18 148,45 168,82 170 C 95 173,105 173,118 170 C 155 168,182 148,185 118 C 188 92,174 66,152 60 C 148 38,132 15,100 15 Z"
-            stroke-width="6"/>
-      <circle cx="72" cy="30" r="5" stroke-width="3"/>
-      <circle cx="128" cy="30" r="5" stroke-width="3"/>
-      <circle cx="45" cy="95" r="4" stroke-width="3"/>
-      <circle cx="155" cy="95" r="4" stroke-width="3"/>
-      <ellipse cx="100" cy="120" rx="52" ry="42" stroke-width="5"/>
-      <path d="M62 145 C 55 158,58 168,70 170 C 80 168,82 158,78 148 Z" stroke-width="4"/>
-      <path d="M138 145 C 145 158,142 168,130 170 C 120 168,118 158,122 148 Z" stroke-width="4"/>
-      <ellipse cx="63" cy="57" rx="17" ry="11" stroke-width="4"/>
-      <path d="M48 60 Q63 68 78 60 Q63 63 48 60 Z" stroke-width="2"/>
-      <ellipse cx="137" cy="57" rx="17" ry="11" stroke-width="4"/>
-      <path d="M122 60 Q137 68 152 60 Q137 63 122 60 Z" stroke-width="2"/>
+    <g filter="url(#toadWobble)">
+      <g id="bigToadLines" clip-path="url(#bigToadClip)"></g>
+      <g fill="none" stroke="#3a0810" stroke-linejoin="round" opacity=".8">
+        <path d="M35 140 C 15 148,4 165,8 178 C 25 180,42 172,52 158 Z" stroke-width="3.5"/>
+        <path d="M165 140 C 185 148,196 165,192 178 C 175 180,158 172,148 158 Z" stroke-width="3.5"/>
+        <path d="M100 15 C 68 15,52 38,48 60 C 26 66,12 92,15 118 C 18 148,45 168,82 170 C 95 173,105 173,118 170 C 155 168,182 148,185 118 C 188 92,174 66,152 60 C 148 38,132 15,100 15 Z" stroke-width="4"/>
+        <path d="M62 145 C 55 158,58 168,70 170 C 80 168,82 158,78 148 Z" stroke-width="3"/>
+        <path d="M138 145 C 145 158,142 168,130 170 C 120 168,118 158,122 148 Z" stroke-width="3"/>
+      </g>
+      <circle cx="72" cy="30" r="5" fill="none" stroke="#3a0810" stroke-width="2.5"/>
+      <circle cx="128" cy="30" r="5" fill="none" stroke="#3a0810" stroke-width="2.5"/>
+      <circle cx="45" cy="95" r="4" fill="none" stroke="#3a0810" stroke-width="2.5"/>
+      <circle cx="155" cy="95" r="4" fill="none" stroke="#3a0810" stroke-width="2.5"/>
+      <ellipse cx="63" cy="57" rx="17" ry="11" fill="#3a0810" stroke="#210307" stroke-width="2.5"/>
+      <path d="M48 60 Q63 68 78 60 Q63 63 48 60 Z" fill="#e89a9a"/>
+      <ellipse cx="137" cy="57" rx="17" ry="11" fill="#3a0810" stroke="#210307" stroke-width="2.5"/>
+      <path d="M122 60 Q137 68 152 60 Q137 63 122 60 Z" fill="#e89a9a"/>
     </g>
   </symbol>
 </svg>
@@ -830,6 +838,25 @@ function scatterMiniToads(containerId, count){
   }
  }
 }
+function buildBigToadLines(){
+ const g=document.getElementById("bigToadLines"); if(!g) return;
+ const NS="http://www.w3.org/2000/svg";
+ for(let y=10; y<=178; y+=3){
+  const t=(y-10)/168; // 0 сверху -> 1 снизу
+  const lo=[232,150,150], hi=[70,8,14]; // светло-красный/розовый -> тёмный бордовый
+  const jitter=(Math.random()-0.5)*22;
+  const r=Math.max(0,Math.min(255, lo[0]+(hi[0]-lo[0])*t+jitter));
+  const gg=Math.max(0,Math.min(255, lo[1]+(hi[1]-lo[1])*t+jitter*0.4));
+  const b=Math.max(0,Math.min(255, lo[2]+(hi[2]-lo[2])*t+jitter*0.4));
+  const line=document.createElementNS(NS,"line");
+  line.setAttribute("x1","0"); line.setAttribute("x2","200");
+  line.setAttribute("y1",y); line.setAttribute("y2",y);
+  line.setAttribute("stroke", "rgb("+r.toFixed(0)+","+gg.toFixed(0)+","+b.toFixed(0)+")");
+  line.setAttribute("stroke-width", (1.6+Math.random()*0.6).toFixed(2));
+  g.appendChild(line);
+ }
+}
+buildBigToadLines();
 function placeBigFaintToad(containerId){
  const box=document.getElementById(containerId); if(!box) return;
  const wrap=document.createElementNS("http://www.w3.org/2000/svg","svg");
