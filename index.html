@@ -661,6 +661,8 @@ button:hover{background:#3a0912;box-shadow:0 0 12px rgba(255,35,65,.5)}
 @keyframes g{50%{transform:translate(2px,-1px)}100%{transform:translate(-1px,1px)}}@media(max-width:760px){.workspace{grid-template-columns:1fr}.sidebar{border-right:0;border-bottom:1px solid #4e1521}}
 .mini-toads-layer{position:absolute;inset:0;z-index:-1;pointer-events:none;overflow:hidden}
 .mini-toad-inst{position:absolute;opacity:.85;animation:miniToadPulse 6s ease-in-out infinite;filter:drop-shadow(0 0 6px rgba(180,0,24,.35))}
+.eye-inst{position:absolute;animation:eyeBlink 5.5s ease-in-out infinite;filter:drop-shadow(0 0 7px rgba(208,0,32,.5));transform-box:fill-box;transform-origin:center}
+@keyframes eyeBlink{0%,92%,100%{opacity:.8;transform:scaleY(1)}95%{opacity:.5;transform:scaleY(.1)}97%{opacity:.8;transform:scaleY(1)}}
 .faint-ankh{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:34vmin;opacity:.055;pointer-events:none}
 .faint-ankh svg{width:100%;height:auto;display:block}
 .mini-toad-inst text{font-family:var(--font-mono);font-size:13px;dominant-baseline:middle;text-anchor:middle}
@@ -700,6 +702,12 @@ button:hover{background:#3a0912;box-shadow:0 0 12px rgba(255,35,65,.5)}
 <button id="musicToggle" type="button">🔇 МУЗЫКА</button>
 
 <svg width="0" height="0" style="position:absolute">
+  <symbol id="predatorEye" viewBox="0 0 120 80">
+    <ellipse cx="60" cy="40" rx="56" ry="29" fill="#0c0002" stroke="#65000f" stroke-width="3"/>
+    <ellipse cx="60" cy="40" rx="43" ry="24" fill="#7a0212"/>
+    <ellipse cx="60" cy="40" rx="43" ry="24" fill="none" stroke="#d00020" stroke-width="1.5" opacity=".6"/>
+    <rect x="54" y="15" width="12" height="50" rx="6" fill="#050002"/>
+  </symbol>
   <symbol id="miniToad" viewBox="0 0 200 170">
     <defs>
       <clipPath id="miniToadClip">
@@ -760,7 +768,7 @@ button:hover{background:#3a0912;box-shadow:0 0 12px rgba(255,35,65,.5)}
   <div id="mini-toads-login" class="mini-toads-layer"></div>
   <div class="box" id="loginBox">
     <div class="title" id="authTitle">НЕПРОВЕРЕННЫЙ ДОСТУП</div>
-    <div class="sub" id="authSub">БАЗА ДАННЫХ КАМАРИЛЛЫ<br>СИСТЕМА НЕ ПРЕДНАЗНАЧЕНА ДЛЯ ПОСТОРОННИХ<br>ВВЕДИТЕ ПАРОЛЬ ДЛЯ ПРОДОЛЖЕНИЯ</div>
+    <div class="sub" id="authSub">СИСТЕМА НЕ ПРЕДНАЗНАЧЕНА ДЛЯ ПОСТОРОННИХ<br>ВВЕДИТЕ ПАРОЛЬ ДЛЯ ПРОДОЛЖЕНИЯ</div>
     <form id="loginForm">
       <div class="row"><input id="pass" type="password" placeholder="ПАРОЛЬ" autocomplete="off"><button id="submitBtn">ВОЙТИ</button></div>
     </form>
@@ -918,6 +926,35 @@ function scatterMiniToads(containerId, count){
   }
  }
 }
+function scatterEyes(containerId, count){
+ const box=document.getElementById(containerId); if(!box) return;
+ const cols=Math.ceil(Math.sqrt(count*1.7));
+ const rows=Math.ceil(count/cols);
+ const cellW=100/cols, cellH=100/rows;
+ let placed=0;
+ for(let r=0;r<rows && placed<count;r++){
+  for(let c=0;c<cols && placed<count;c++){
+   const jitterX=(Math.random()-0.5)*cellW*0.5;
+   const jitterY=(Math.random()-0.5)*cellH*0.5;
+   const left=Math.min(90, Math.max(1, c*cellW+cellW*0.5+jitterX-6));
+   const top=Math.min(88, Math.max(1, r*cellH+cellH*0.5+jitterY-4));
+   const wrap=document.createElementNS("http://www.w3.org/2000/svg","svg");
+   wrap.setAttribute("viewBox","0 0 120 80");
+   const size=44+Math.random()*44;
+   wrap.setAttribute("width",size); wrap.setAttribute("height",size*80/120);
+   wrap.classList.add("eye-inst");
+   wrap.style.left=left+"%";
+   wrap.style.top=top+"%";
+   wrap.style.animationDelay=(-Math.random()*5.5)+"s";
+   wrap.style.transform="rotate("+(Math.random()*10-5)+"deg)";
+   const use=document.createElementNS("http://www.w3.org/2000/svg","use");
+   use.setAttribute("href","#predatorEye");
+   wrap.appendChild(use);
+   box.appendChild(wrap);
+   placed++;
+  }
+ }
+}
 function buildBigToadLines(){
  const g=document.getElementById("bigToadLines"); if(!g) return;
  const NS="http://www.w3.org/2000/svg";
@@ -948,7 +985,7 @@ function placeFaintAnkh(containerId){
   +'</svg>';
  box.appendChild(wrap);
 }
-scatterMiniToads("mini-toads-login", 11);
+scatterEyes("mini-toads-login", 11);
 placeFaintAnkh("mini-toads-app");
 
 
