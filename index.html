@@ -661,7 +661,8 @@ button:hover{background:#3a0912;box-shadow:0 0 12px rgba(255,35,65,.5)}
 @keyframes g{50%{transform:translate(2px,-1px)}100%{transform:translate(-1px,1px)}}@media(max-width:760px){.workspace{grid-template-columns:1fr}.sidebar{border-right:0;border-bottom:1px solid #4e1521}}
 .mini-toads-layer{position:absolute;inset:0;z-index:-1;pointer-events:none;overflow:hidden}
 .mini-toad-inst{position:absolute;opacity:.85;animation:miniToadPulse 6s ease-in-out infinite;filter:drop-shadow(0 0 6px rgba(180,0,24,.35))}
-.mini-toad-inst.big-faint{opacity:.4;animation:none;filter:none}
+.faint-ankh{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:34vmin;opacity:.055;pointer-events:none}
+.faint-ankh svg{width:100%;height:auto;display:block}
 .mini-toad-inst text{font-family:var(--font-mono);font-size:13px;dominant-baseline:middle;text-anchor:middle}
 @keyframes miniToadPulse{0%,100%{opacity:.7}50%{opacity:1}}
 #musicToggle{
@@ -936,21 +937,19 @@ function buildBigToadLines(){
  }
 }
 buildBigToadLines();
-function placeBigFaintToad(containerId){
+function placeFaintAnkh(containerId){
  const box=document.getElementById(containerId); if(!box) return;
- const wrap=document.createElementNS("http://www.w3.org/2000/svg","svg");
- wrap.setAttribute("viewBox","0 0 200 180");
- wrap.classList.add("mini-toad-inst","big-faint");
- wrap.style.left="50%"; wrap.style.top="50%";
- wrap.style.width="72vmin"; wrap.style.height="calc(72vmin * 0.9)";
- wrap.style.transform="translate(-50%,-50%)";
- const use=document.createElementNS("http://www.w3.org/2000/svg","use");
- use.setAttribute("href","#bigToad");
- wrap.appendChild(use);
+ const wrap=document.createElement("div");
+ wrap.className="faint-ankh";
+ wrap.innerHTML='<svg viewBox="0 0 100 140" xmlns="http://www.w3.org/2000/svg">'
+  +'<circle cx="50" cy="38" r="22" fill="none" stroke="#b40018" stroke-width="7"/>'
+  +'<line x1="50" y1="58" x2="50" y2="132" stroke="#b40018" stroke-width="8"/>'
+  +'<line x1="14" y1="80" x2="86" y2="80" stroke="#b40018" stroke-width="8"/>'
+  +'</svg>';
  box.appendChild(wrap);
 }
 scatterMiniToads("mini-toads-login", 11);
-placeBigFaintToad("mini-toads-app");
+placeFaintAnkh("mini-toads-app");
 
 
 // ===================== МУЗЫКА (генерируется в браузере, без файлов) =====================
